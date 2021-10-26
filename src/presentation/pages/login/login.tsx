@@ -6,12 +6,14 @@ import FormContext, {
   StateTypes,
   ErrorStateTypes
 } from '@/presentation/contexts/form-context'
+import { SaveAccessToken } from '@/domain/usecases'
 
 type Props = {
   validator: Validator
+  saveAccessToken: SaveAccessToken
 }
 
-const Login: React.FC<Props> = ({ validator }) => {
+const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
   const [state, setState] = useState<StateTypes>({
     name: '',
     password: ''
@@ -33,6 +35,13 @@ const Login: React.FC<Props> = ({ validator }) => {
     }))
   }, [state.password, state.name])
 
+  const loginHandler = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    event.preventDefault()
+    await saveAccessToken.save(state.name)
+  }
+
   return (
     <FormContext.Provider
       value={{
@@ -41,7 +50,11 @@ const Login: React.FC<Props> = ({ validator }) => {
       }}
     >
       <div className={Styles.wrapper}>
-        <form data-testid="login-form" className={Styles.form}>
+        <form
+          data-testid="login-form"
+          className={Styles.form}
+          onSubmit={loginHandler}
+          >
           <h2>Bem vindo(a)</h2>
           <Input type="text" name="name" placeholder="Nome de usuário" />
           <Input type="password" name="password" placeholder="Senha" />
