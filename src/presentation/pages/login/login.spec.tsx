@@ -1,14 +1,23 @@
 import React from 'react'
 import Login from './login'
-import { render, RenderResult } from '@testing-library/react'
+import { render, RenderResult, waitFor } from '@testing-library/react'
 import * as Helper from '@/presentation/test/form-helper'
-import { ValidationSpy } from '@/presentation/test'
+import { ValidationSpy, AccessTokenStub } from '@/presentation/test'
 import faker from 'faker'
+import { SaveAccessToken } from '@/domain/usecases'
 
 const VALIDATION_ERROR_MESSAGE = faker.random.words(2)
 const CREDENTIALS = {
   name: faker.random.words(),
   password: faker.internet.password()
+}
+
+const makeValidSubmit = (
+  sut: RenderResult
+): void => {
+  Helper.populateField(sut, 'password', CREDENTIALS.password)
+  Helper.populateField(sut, 'name', CREDENTIALS.name)
+  Helper.clickElement(sut, 'submit-button')
 }
 
 const makeValidationSpyAssertion = (
@@ -34,13 +43,19 @@ const makeValidationSpyAssertion = (
 type SutTypes = {
   sut: RenderResult
   validatorSpy: ValidationSpy
+  saveAccessTokenStub: SaveAccessToken
 }
 
 const makeSut = (validationError?: string): SutTypes => {
   const validatorSpy = new ValidationSpy()
+  const saveAccessTokenStub = new AccessTokenStub()
   validatorSpy.errorMessage = validationError ?? null
-  const sut = render(<Login validator={validatorSpy}/>)
-  return { sut, validatorSpy }
+  const sut = render(
+  <Login
+    validator={validatorSpy}
+    saveAccessToken={saveAccessTokenStub}
+    />)
+  return { sut, validatorSpy, saveAccessTokenStub }
 }
 
 describe('Login', () => {
@@ -83,5 +98,13 @@ describe('Login', () => {
     Helper.populateField(sut, 'password', CREDENTIALS.password)
     Helper.populateField(sut, 'name', CREDENTIALS.name)
     Helper.testButtonDisabled(sut, 'submit-button', false)
+  })
+  test('Should call SaveAccessToken with user name on success', async () => {
+    const { sut, saveAccessTokenStub } = makeSut()
+    const saveTokenSpy = jest.spyOn(saveAccessTokenStub, 'save')
+    makeValidSubmit(sut)
+    const form = sut.getByTestId('login-form')
+    await waitFor(() => form)
+    expect(saveTokenSpy).toHaveBeenCalledWith(CREDENTIALS.name)
   })
 })
