@@ -20,13 +20,10 @@ describe('ValidationBuilder', () => {
   })
   test('Should have the correct number of Validation dependencies', () => {
     const validations = sut.fieldName(field)
-      .required()
       .min(length)
+      .required()
       .build()
-    expect(validations).toEqual([
-      new RequiredFieldValidator(field),
-      new MinLengthValidator(field, length)
-    ])
+    expect(validations).toEqual([new MinLengthValidator(field, length), new RequiredFieldValidator(field)])
     expect(validations.length).toBe(2)
   })
 })
