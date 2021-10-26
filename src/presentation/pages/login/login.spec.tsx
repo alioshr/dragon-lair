@@ -78,4 +78,10 @@ describe('Login', () => {
     Helper.populateField(sut, 'password', CREDENTIALS.password)
     Helper.testStatusForField(sut, 'password', 'valid')
   })
+  test('Should enable the submit button if the form is valid', () => {
+    const { sut } = makeSut()
+    Helper.populateField(sut, 'password', CREDENTIALS.password)
+    Helper.populateField(sut, 'name', CREDENTIALS.name)
+    Helper.testButtonDisabled(sut, 'submit-button', false)
+  })
 })
