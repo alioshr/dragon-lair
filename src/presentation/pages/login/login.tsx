@@ -23,8 +23,8 @@ const Login: React.FC<Props> = ({ validator }) => {
   })
 
   useEffect(() => {
-    const nameError = validator.validate('name', errorState)
-    const passwordError = validator.validate('password', errorState)
+    const nameError = validator.validate('name', state)
+    const passwordError = validator.validate('password', state)
 
     setErrorState((prevState) => ({
       ...prevState,
