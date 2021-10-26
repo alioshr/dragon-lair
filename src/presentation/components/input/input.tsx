@@ -1,5 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import Styles from './input-styles.scss'
+import FormContext, { FormStateTypes } from '@/presentation/contexts/form-context'
 
 type Props = React.DetailedHTMLProps<
 React.InputHTMLAttributes<HTMLInputElement>,
@@ -9,15 +10,17 @@ HTMLInputElement
 const Input: React.FC<Props> = (props: Props) => {
   const inputRef = useRef<HTMLInputElement>()
   const [touched, setTouched] = useState(false)
+  const { errorState } = useContext<FormStateTypes>(FormContext)
+  const error = errorState[0][props.name as 'name' | 'password']
 
   return (
     <div
     data-testid={`${props.name as string}-wrapper`}
     className={Styles.inputWrapper}
     data-status={
-      true && !touched
+      error && !touched
         ? 'default'
-        : touched
+        : error && touched
           ? 'invalid'
           : 'valid'
         }
@@ -25,6 +28,7 @@ const Input: React.FC<Props> = (props: Props) => {
       <input
         onBlur={() => !touched && setTouched(true)}
         ref={inputRef as any}
+        title={error as string}
         data-testid={`${props.name as string}-input`}
         {...props}
         placeholder=" "
@@ -34,6 +38,7 @@ const Input: React.FC<Props> = (props: Props) => {
         }}
       />
       <label
+      title={error as string}
       data-testid={`${props.name as string}-label`}
       onClick={() => { (inputRef as React.MutableRefObject<HTMLInputElement>).current.focus() }}
       >{props.placeholder}
