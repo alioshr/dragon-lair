@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Styles from './login-styles.scss'
-import { Input } from '@/presentation/components'
+import { FormStatus, Input } from '@/presentation/components'
 import { Validator } from '@/presentation/protocols'
 import FormContext, {
   StateTypes,
@@ -73,6 +73,7 @@ const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
           >
             Entrar
           </button>
+          <FormStatus />
         </form>
       </div>
     </FormContext.Provider>
