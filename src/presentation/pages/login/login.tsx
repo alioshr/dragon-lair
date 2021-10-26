@@ -7,6 +7,7 @@ import FormContext, {
   ErrorStateTypes
 } from '@/presentation/contexts/form-context'
 import { SaveAccessToken } from '@/domain/usecases'
+import { useHistory } from 'react-router-dom'
 
 type Props = {
   validator: Validator
@@ -14,6 +15,7 @@ type Props = {
 }
 
 const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
+  const history = useHistory()
   const [state, setState] = useState<StateTypes>({
     name: '',
     password: ''
@@ -42,6 +44,7 @@ const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
     event.preventDefault()
     try {
       await saveAccessToken.save(state.name)
+      history.replace('/')
     } catch (error) {
       setErrorState((prevState) => ({
         ...prevState,
