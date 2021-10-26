@@ -107,4 +107,13 @@ describe('Login', () => {
     await waitFor(() => form)
     expect(saveTokenSpy).toHaveBeenCalledWith(CREDENTIALS.name)
   })
+  test('Should present an error if SaveAccessToken fails', async () => {
+    const { sut, saveAccessTokenStub } = makeSut()
+    const error = new Error('Oh, boy. Something went wrong')
+    jest.spyOn(saveAccessTokenStub, 'save').mockReturnValueOnce(Promise.reject(error))
+    makeValidSubmit(sut)
+    await Helper.testChildCount(sut, 'status-wrapper', 1)
+    const mainErrorLabel = sut.getByTestId('main-error')
+    expect(mainErrorLabel.textContent).toBe(error.message)
+  })
 })
