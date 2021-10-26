@@ -54,4 +54,9 @@ describe('Login', () => {
     const { sut, validatorSpy } = makeSut(VALIDATION_ERROR_MESSAGE)
     makeValidationSpyAssertion(validatorSpy, sut, 'name', { name: CREDENTIALS.name, password: '' })
   })
+  test('Should show a name error if validation fails', () => {
+    const { sut, validatorSpy } = makeSut(VALIDATION_ERROR_MESSAGE)
+    Helper.populateField(sut, 'name', CREDENTIALS.name)
+    Helper.testStatusForField(sut, 'name', 'default', validatorSpy.errorMessage as string)
+  })
 })
