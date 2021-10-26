@@ -21,7 +21,8 @@ const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
 
   const [errorState, setErrorState] = useState<ErrorStateTypes>({
     name: '',
-    password: ''
+    password: '',
+    main: ''
   })
 
   useEffect(() => {
@@ -39,7 +40,14 @@ const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault()
-    await saveAccessToken.save(state.name)
+    try {
+      await saveAccessToken.save(state.name)
+    } catch (error) {
+      setErrorState((prevState) => ({
+        ...prevState,
+        main: (error as Error).message
+      }))
+    }
   }
 
   return (

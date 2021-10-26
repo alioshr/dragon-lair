@@ -8,6 +8,7 @@ export type StateTypes = {
 export type ErrorStateTypes = {
   password: string | null
   name: string | null
+  main: string | null
 }
 
 export type FormStateTypes = {
