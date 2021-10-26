@@ -5,6 +5,8 @@ import * as Helper from '@/presentation/test/form-helper'
 import { ValidationSpy, AccessTokenStub } from '@/presentation/test'
 import faker from 'faker'
 import { SaveAccessToken } from '@/domain/usecases'
+import { createMemoryHistory } from 'history'
+import { Router } from 'react-router-dom'
 
 const VALIDATION_ERROR_MESSAGE = faker.random.words(2)
 const CREDENTIALS = {
@@ -12,9 +14,7 @@ const CREDENTIALS = {
   password: faker.internet.password()
 }
 
-const makeValidSubmit = (
-  sut: RenderResult
-): void => {
+const makeValidSubmit = (sut: RenderResult): void => {
   Helper.populateField(sut, 'password', CREDENTIALS.password)
   Helper.populateField(sut, 'name', CREDENTIALS.name)
   Helper.clickElement(sut, 'submit-button')
@@ -31,13 +31,8 @@ const makeValidationSpyAssertion = (
     ? Helper.populateField(sut, 'name', CREDENTIALS.name)
     : Helper.populateField(sut, 'password', CREDENTIALS.password)
 
-  expect(validatorSpy).toHaveBeenCalledWith(
-    fieldName,
-    credentials
-  )
-  expect(validationSpy.inputData).toEqual(
-    credentials
-  )
+  expect(validatorSpy).toHaveBeenCalledWith(fieldName, credentials)
+  expect(validationSpy.inputData).toEqual(credentials)
 }
 
 type SutTypes = {
@@ -46,15 +41,16 @@ type SutTypes = {
   saveAccessTokenStub: SaveAccessToken
 }
 
+const history = createMemoryHistory({ initialEntries: ['/login'] })
 const makeSut = (validationError?: string): SutTypes => {
   const validatorSpy = new ValidationSpy()
   const saveAccessTokenStub = new AccessTokenStub()
   validatorSpy.errorMessage = validationError ?? null
   const sut = render(
-  <Login
-    validator={validatorSpy}
-    saveAccessToken={saveAccessTokenStub}
-    />)
+    <Router history={history}>
+      <Login validator={validatorSpy} saveAccessToken={saveAccessTokenStub} />
+    </Router>
+  )
   return { sut, validatorSpy, saveAccessTokenStub }
 }
 
@@ -63,25 +59,46 @@ describe('Login', () => {
     const { sut } = makeSut(VALIDATION_ERROR_MESSAGE)
     Helper.testButtonDisabled(sut, 'submit-button', true)
     Helper.testStatusForField(sut, 'name', 'default', VALIDATION_ERROR_MESSAGE)
-    Helper.testStatusForField(sut, 'password', 'default', VALIDATION_ERROR_MESSAGE)
+    Helper.testStatusForField(
+      sut,
+      'password',
+      'default',
+      VALIDATION_ERROR_MESSAGE
+    )
   })
   test('Should call validation with the correct name', () => {
     const { sut, validatorSpy } = makeSut(VALIDATION_ERROR_MESSAGE)
-    makeValidationSpyAssertion(validatorSpy, sut, 'name', { name: CREDENTIALS.name, password: '' })
+    makeValidationSpyAssertion(validatorSpy, sut, 'name', {
+      name: CREDENTIALS.name,
+      password: ''
+    })
   })
   test('Should show a name error if validation fails', () => {
     const { sut, validatorSpy } = makeSut(VALIDATION_ERROR_MESSAGE)
     Helper.populateField(sut, 'name', CREDENTIALS.name)
-    Helper.testStatusForField(sut, 'name', 'default', validatorSpy.errorMessage as string)
+    Helper.testStatusForField(
+      sut,
+      'name',
+      'default',
+      validatorSpy.errorMessage as string
+    )
   })
   test('Should call validation with the correct password', () => {
     const { sut, validatorSpy } = makeSut(VALIDATION_ERROR_MESSAGE)
-    makeValidationSpyAssertion(validatorSpy, sut, 'password', { name: '', password: CREDENTIALS.password })
+    makeValidationSpyAssertion(validatorSpy, sut, 'password', {
+      name: '',
+      password: CREDENTIALS.password
+    })
   })
   test('Should show a password error if validation fails', () => {
     const { sut, validatorSpy } = makeSut(VALIDATION_ERROR_MESSAGE)
     Helper.populateField(sut, 'password', CREDENTIALS.password)
-    Helper.testStatusForField(sut, 'password', 'default', validatorSpy.errorMessage as string)
+    Helper.testStatusForField(
+      sut,
+      'password',
+      'default',
+      validatorSpy.errorMessage as string
+    )
   })
   test('Should show a valid name if validation succeeds', () => {
     const { sut } = makeSut()
@@ -110,10 +127,20 @@ describe('Login', () => {
   test('Should present an error if SaveAccessToken fails', async () => {
     const { sut, saveAccessTokenStub } = makeSut()
     const error = new Error('Oh, boy. Something went wrong')
-    jest.spyOn(saveAccessTokenStub, 'save').mockReturnValueOnce(Promise.reject(error))
+    jest
+      .spyOn(saveAccessTokenStub, 'save')
+      .mockReturnValueOnce(Promise.reject(error))
     makeValidSubmit(sut)
     await Helper.testChildCount(sut, 'status-wrapper', 1)
     const mainErrorLabel = sut.getByTestId('main-error')
     expect(mainErrorLabel.textContent).toBe(error.message)
+  })
+  test('Should go to homepage on auth success', async () => {
+    const { sut } = makeSut()
+    makeValidSubmit(sut)
+    const form = sut.getByTestId('login-form')
+    await waitFor(() => form)
+    expect(history.length).toBe(1)
+    expect(history.location.pathname).toBe('/')
   })
 })
