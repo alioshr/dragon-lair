@@ -73,4 +73,9 @@ describe('Login', () => {
     Helper.populateField(sut, 'name', CREDENTIALS.name)
     Helper.testStatusForField(sut, 'name', 'valid')
   })
+  test('Should show a valid password if validation succeeds', () => {
+    const { sut } = makeSut()
+    Helper.populateField(sut, 'password', CREDENTIALS.password)
+    Helper.testStatusForField(sut, 'password', 'valid')
+  })
 })
