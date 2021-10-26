@@ -16,7 +16,7 @@ const Login: React.FC = () => {
             data-testid="submit-button"
             type="submit"
           >
-            Login
+            Entrar
           </button>
         </form>
   </div>
