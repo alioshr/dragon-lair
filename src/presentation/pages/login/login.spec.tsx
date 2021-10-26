@@ -59,4 +59,13 @@ describe('Login', () => {
     Helper.populateField(sut, 'name', CREDENTIALS.name)
     Helper.testStatusForField(sut, 'name', 'default', validatorSpy.errorMessage as string)
   })
+  test('Should call validation with the correct password', () => {
+    const { sut, validatorSpy } = makeSut(VALIDATION_ERROR_MESSAGE)
+    makeValidationSpyAssertion(validatorSpy, sut, 'password', { name: '', password: CREDENTIALS.password })
+  })
+  test('Should show a password error if validation fails', () => {
+    const { sut, validatorSpy } = makeSut(VALIDATION_ERROR_MESSAGE)
+    Helper.populateField(sut, 'password', CREDENTIALS.password)
+    Helper.testStatusForField(sut, 'password', 'default', validatorSpy.errorMessage as string)
+  })
 })
