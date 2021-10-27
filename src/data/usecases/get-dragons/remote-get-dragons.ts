@@ -7,10 +7,11 @@ export class RemoteGetDragons implements GetDragons {
     private readonly httpClient: HttpClient
   ) {}
 
-  async get (id?: number): Promise<Dragon[]> {
+  async get (id?: string): Promise<Dragon[]> {
     await this.httpClient.request({
       url: this.url,
-      method: 'GET'
+      method: 'GET',
+      params: id
     })
     return await Promise.resolve(null as any)
   }
