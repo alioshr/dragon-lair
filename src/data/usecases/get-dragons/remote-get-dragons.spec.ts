@@ -2,6 +2,8 @@ import { HttpClientSpy, mockedUrl } from '@/data/tests'
 import { GetDragons } from '@/domain/usecases/get-dragons'
 import { RemoteGetDragons } from './remote-get-dragons'
 import faker from 'faker'
+import { UnexpectedError } from '@/domain/errors'
+import { HttpStatusCode } from '@/data/protocols'
 
 const URL = mockedUrl()
 
@@ -28,5 +30,12 @@ describe('RemoteGetDragons', () => {
     const params = faker.datatype.uuid()
     await sut.get(params)
     expect(httpClientSpy.params).toBe(params)
+  })
+  test('should throw Unexpected error HttpClient returns 400', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    httpClientSpy.response = { statusCode: HttpStatusCode.badRequest }
+    const params = faker.datatype.uuid()
+    const promise = sut.get(params)
+    await expect(promise).rejects.toThrow(new UnexpectedError())
   })
 })
