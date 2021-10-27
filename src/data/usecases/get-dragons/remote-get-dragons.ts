@@ -1,4 +1,5 @@
-import { HttpClient } from '@/data/protocols'
+import { HttpClient, HttpStatusCode } from '@/data/protocols'
+import { UnexpectedError } from '@/domain/errors'
 import { Dragon } from '@/domain/models'
 import { GetDragons } from '@/domain/usecases/get-dragons'
 
@@ -8,11 +9,15 @@ export class RemoteGetDragons implements GetDragons {
   ) {}
 
   async get (id?: string): Promise<Dragon[]> {
-    await this.httpClient.request({
+    const httpResponse = await this.httpClient.request({
       url: this.url,
       method: 'GET',
       params: id
     })
-    return await Promise.resolve(null as any)
+
+    switch (httpResponse.statusCode) {
+      case HttpStatusCode.ok: return null as any
+      default: throw new UnexpectedError()
+    }
   }
 }
