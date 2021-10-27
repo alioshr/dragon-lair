@@ -38,4 +38,11 @@ describe('RemoteGetDragons', () => {
     const promise = sut.get(params)
     await expect(promise).rejects.toThrow(new UnexpectedError())
   })
+  test('should throw Unexpected error HttpClient returns 404', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    httpClientSpy.response = { statusCode: HttpStatusCode.notFound }
+    const params = faker.datatype.uuid()
+    const promise = sut.get(params)
+    await expect(promise).rejects.toThrow(new UnexpectedError())
+  })
 })
