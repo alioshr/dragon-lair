@@ -4,6 +4,7 @@ import { RemoteGetDragons } from './remote-get-dragons'
 import faker from 'faker'
 import { UnexpectedError } from '@/domain/errors'
 import { HttpStatusCode } from '@/data/protocols'
+import { mockedDragons } from '@/domain/test'
 
 const URL = mockedUrl()
 
@@ -51,5 +52,15 @@ describe('RemoteGetDragons', () => {
     const params = faker.datatype.uuid()
     const promise = sut.get(params)
     await expect(promise).rejects.toThrow(new UnexpectedError())
+  })
+  test('should return dragons on success (200)', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    const responseBody = mockedDragons()
+    httpClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: responseBody
+    }
+    const httpResponse = await sut.get()
+    expect(httpResponse).toEqual(responseBody)
   })
 })
