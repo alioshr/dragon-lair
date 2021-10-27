@@ -16,7 +16,7 @@ export class RemoteGetDragons implements GetDragons {
     })
 
     switch (httpResponse.statusCode) {
-      case HttpStatusCode.ok: return null as any
+      case HttpStatusCode.ok: return httpResponse.body
       default: throw new UnexpectedError()
     }
   }
