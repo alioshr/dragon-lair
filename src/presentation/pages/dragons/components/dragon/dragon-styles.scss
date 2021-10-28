@@ -1,7 +1,8 @@
 @import '../../../../styles/colors';
 
 .dragonContent {
-  height: 220px;
+  text-align: center;
+  min-height: 300px;
   border-radius: 5px 5px 0 0;
   display: flex;
   justify-content: space-between;
@@ -22,6 +23,7 @@
     right: 0;
     top: 0;
     width: 90px;
+    height: 45px;
     padding: 0.4rem;
     display: flex;
     justify-content: space-between;
@@ -35,17 +37,24 @@
       }
     }
   }
-  .dragonInfoWrapper {
+  .infoWrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 45px 0;
+    justify-content: space-evenly;
+    flex-grow: 1;
+
+  .infoCard {
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex-grow: 1;
-    margin: 80px 1.4rem 1.4rem 1.4rem;
+    margin: 0;
 
     h2 {
       color: $black;
     }
   }
+}
 
   time {
     display: flex;
@@ -101,11 +110,17 @@ footer {
   }
 }
 
-@media only screen and (min-width: 400px) {
+@media only screen and (min-width: 430px) {
   .dragonContent {
-    .dragonInfoWrapper {
+    min-height: 220px;
+    min-width: 400px;
+    .infoWrapper {
+      display: flex;
+      flex-direction: row;
+    .infoCard {
       justify-content: center;
       margin: 0 !important;
     }
+  }
   }
 }

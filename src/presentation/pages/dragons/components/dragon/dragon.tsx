@@ -28,13 +28,15 @@ const DragonCard: React.FC<Props> = ({ dragon }) => {
             {new Date(dragon.createdAt).getFullYear()}
           </span>
         </time>
-        <div className={Styles.dragonInfoWrapper}>
+        <div className={Styles.infoWrapper}>
+        <div className={Styles.infoCard}>
           <h2>Nome</h2>
           <p>{useTruncate(dragon.name, 20)}</p>
         </div>
-        <div className={Styles.dragonInfoWrapper}>
+        <div className={Styles.infoCard}>
           <h2>Tipo</h2>
           <p>{useTruncate(dragon.type, 20)}</p>
+        </div>
         </div>
       </div>
       <footer>Detalhes</footer>

@@ -3,10 +3,10 @@
 .dragonListWrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 88vh;
   justify-content: space-between;
   background: $primaryDark;
-  padding-top: 5rem;
+  margin-top: 80px;
 
   .contentWrapper {
     display: flex;
@@ -14,6 +14,8 @@
     align-self: center;
     flex-grow: 1;
     padding: 1rem;
+    width: 100%;
+    flex-wrap: wrap;
 
     h2 {
       font-size: 20px;
