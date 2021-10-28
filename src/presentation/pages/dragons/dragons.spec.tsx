@@ -42,4 +42,8 @@ describe('Dragons', () => {
     expect(dragons).toHaveLength(3)
     expect(skeletons.length).toBe(0)
   })
+  test('Should call GetDragons just once on start', () => {
+    const { getDragonsSpy } = makeSut()
+    expect(getDragonsSpy.callCount).toBe(1)
+  })
 })
