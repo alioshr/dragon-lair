@@ -46,4 +46,11 @@ describe('RemoteGetDragons', () => {
     const promise = sut.delete(params)
     await expect(promise).rejects.toThrow(new UnexpectedError())
   })
+  test('should throw Unexpected error HttpClient returns 500', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    httpClientSpy.response = { statusCode: HttpStatusCode.serverError }
+    const params = faker.datatype.uuid()
+    const promise = sut.delete(params)
+    await expect(promise).rejects.toThrow(new UnexpectedError())
+  })
 })
