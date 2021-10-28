@@ -8,7 +8,7 @@ const Dragons: React.FC = () => {
     <div className={Styles.dragonListWrapper}>
       <div className={Styles.contentWrapper}>
         <h2>Dragons</h2>
-        <ul>
+        <ul data-testid="dragons-list">
           <li>
             <div className={Styles.dragonContent}>
               <div className={Styles.actions}>
@@ -31,6 +31,9 @@ const Dragons: React.FC = () => {
             </div>
             <footer>Detalhes</footer>
           </li>
+          <li></li>
+          <li></li>
+          <li></li>
           <li></li>
         </ul>
       </div>
