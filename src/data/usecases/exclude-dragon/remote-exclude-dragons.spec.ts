@@ -24,4 +24,10 @@ describe('RemoteGetDragons', () => {
     expect(httpClientSpy.url).toBe(URL)
     expect(httpClientSpy.method).toBe('DELETE')
   })
+  test('should call HttpClient with the correct params', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    const params = faker.datatype.uuid()
+    await sut.delete(params)
+    expect(httpClientSpy.params).toBe(params)
+  })
 })
