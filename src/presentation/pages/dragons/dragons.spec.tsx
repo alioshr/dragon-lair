@@ -21,8 +21,7 @@ type SutTypes = {
   getDragonsSpy: GetDragonsSpy
 
 }
-const makeSut = (): SutTypes => {
-  const getDragonsSpy = new GetDragonsSpy()
+const makeSut = (getDragonsSpy = new GetDragonsSpy()): SutTypes => {
   const sut = render(<Dragons getDragons={getDragonsSpy}/>)
   return { sut, getDragonsSpy }
 }
@@ -45,5 +44,13 @@ describe('Dragons', () => {
   test('Should call GetDragons just once on start', () => {
     const { getDragonsSpy } = makeSut()
     expect(getDragonsSpy.callCount).toBe(1)
+  })
+  test('should present an error if GetDragons fails', async () => {
+    const getDragonSpy = new GetDragonsSpy()
+    jest.spyOn(getDragonSpy, 'get').mockRejectedValueOnce(new Error('horrible error'))
+    makeSut(getDragonSpy)
+    const dragonList = screen.getByTestId('dragons-list')
+    await waitFor(() => dragonList)
+    expect(screen.getByTestId('error')).toBeTruthy()
   })
 })
