@@ -11,14 +11,13 @@ const Header: React.FC<Props> = ({ children }) => (
     <header className={Styles.headerWrapper}>
       <div className={Styles.headerContent}>
       <Logo />
-      <h2>DRAGON LAIR</h2>
-        <div className={Styles.logoutWrapper}>
+        {/* <div className={Styles.logoutWrapper}>
           <span>Aliosh</span>
           <a href="#">Leave</a>
-        </div>
+        </div> */}
       </div>
     </header>
-    <div className={Styles.mainContent}>{children}</div>
+    {children}
   </React.Fragment>
 )
 

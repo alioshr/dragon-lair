@@ -1,6 +1,5 @@
 @import '../../styles/colors';
 @import '../../styles/config';
-$maxWidth: 80vw;
 
 .headerWrapper {
   display: flex;
@@ -16,9 +15,8 @@ $maxWidth: 80vw;
 
   .headerContent {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    max-width: $maxWidth;
     flex-grow: 1;
   }
 
@@ -28,7 +26,6 @@ $maxWidth: 80vw;
 
   h2 {
     font-size: 1.1rem;
-    color: $white;
     font-weight: bold;
   }
 
@@ -37,14 +34,12 @@ $maxWidth: 80vw;
     flex-direction: column;
     justify-content: center;
     align-items: flex-end;
-    color: $white;
     span {
       font-size: 1rem;
       margin-bottom: .5rem;
     }
 
     a {
-      color: $white;
       text-decoration: none;
       &:hover {
         text-decoration: underline;
@@ -53,6 +48,8 @@ $maxWidth: 80vw;
   }
 }
 
-.mainContent {
-  margin-top: 5rem;
+@media only screen and (min-width: 600px) {
+  .headerContent {
+    max-width: 80vw;
+  }
 }
