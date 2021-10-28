@@ -29,13 +29,9 @@ const DragonCard: React.FC<Props> = ({ dragon }) => {
           </span>
         </time>
         <div className={Styles.infoWrapper}>
-        <div className={Styles.infoCard}>
+          <div className={Styles.infoCard}>
           <h2>Nome</h2>
-          <p>{useTruncate(dragon.name, 20)}</p>
-        </div>
-        <div className={Styles.infoCard}>
-          <h2>Tipo</h2>
-          <p>{useTruncate(dragon.type, 20)}</p>
+          <p>{useTruncate(dragon.name, 80)}</p>
         </div>
         </div>
       </div>
