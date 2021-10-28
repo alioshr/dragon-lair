@@ -2,6 +2,8 @@ import { HttpClientSpy, mockedUrl } from '@/data/tests'
 import faker from 'faker'
 import { ExcludeDragon } from '@/domain/usecases/exclude-dragon'
 import { RemoteExcludeDragon } from './remote-exclude-dragons'
+import { HttpStatusCode } from '@/data/protocols'
+import { UnexpectedError } from '@/domain/errors'
 
 const URL = mockedUrl()
 
@@ -29,5 +31,12 @@ describe('RemoteGetDragons', () => {
     const params = faker.datatype.uuid()
     await sut.delete(params)
     expect(httpClientSpy.params).toBe(params)
+  })
+  test('should throw Unexpected error HttpClient returns 400', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    httpClientSpy.response = { statusCode: HttpStatusCode.badRequest }
+    const params = faker.datatype.uuid()
+    const promise = sut.delete(params)
+    await expect(promise).rejects.toThrow(new UnexpectedError())
   })
 })
