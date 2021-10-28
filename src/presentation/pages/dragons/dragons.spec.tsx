@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, RenderResult, screen, waitFor } from '@testing-library/react'
 import { Dragons } from '..'
 import { GetDragons } from '@/domain/usecases/get-dragons'
 import { Dragon } from '@/domain/models'
@@ -46,11 +46,21 @@ describe('Dragons', () => {
     expect(getDragonsSpy.callCount).toBe(1)
   })
   test('should present an error if GetDragons fails', async () => {
-    const getDragonSpy = new GetDragonsSpy()
-    jest.spyOn(getDragonSpy, 'get').mockRejectedValueOnce(new Error('horrible error'))
-    makeSut(getDragonSpy)
+    const getDragonsSpy = new GetDragonsSpy()
+    jest.spyOn(getDragonsSpy, 'get').mockRejectedValueOnce(new Error('horrible error'))
+    makeSut(getDragonsSpy)
     const dragonList = screen.getByTestId('dragons-list')
     await waitFor(() => dragonList)
     expect(screen.getByTestId('error')).toBeTruthy()
+  })
+  test('Should call GetDragons on reload', async () => {
+    const getDragonsSpy = new GetDragonsSpy()
+    jest.spyOn(getDragonsSpy, 'get').mockRejectedValueOnce(new Error('horrible error'))
+    makeSut(getDragonsSpy)
+    const dragonList = screen.getByTestId('dragons-list')
+    await waitFor(() => dragonList)
+    fireEvent.click(screen.getByTestId('reload'))
+    expect(getDragonsSpy.callCount).toBe(1)
+    await waitFor(() => screen.getByRole('heading'))
   })
 })
