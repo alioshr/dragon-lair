@@ -5,13 +5,15 @@ import { Header } from '../components'
 
 type Props = {
   makeLogin: React.FC
+  makeDragons: React.FC
 }
 
-const Router: React.FC<Props> = ({ makeLogin }) => {
+const Router: React.FC<Props> = ({ makeLogin, makeDragons }) => {
   return (
     <Header>
       <BrowserRouter>
         <Switch>
+          <Route path="/" exact component={makeDragons} />
           <Route path="/login" exact component={makeLogin} />
         </Switch>
       </BrowserRouter>
