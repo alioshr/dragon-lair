@@ -5,6 +5,7 @@ import { DragonList } from './components'
 import DragonsContext, {
   StateTypes
 } from '@/presentation/contexts/dragon-context'
+import { Error } from '@/presentation/components'
 
 type Props = {
   getDragons: GetDragons
@@ -28,18 +29,29 @@ const Dragons: React.FC<Props> = ({ getDragons }) => {
           isLoading: false
         }))
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        setState((prevState) => ({
+          ...prevState,
+          isLoading: false,
+          error: error.message
+        }))
+      })
   }, [])
 
   return (
-    <DragonsContext.Provider
-    value={{ state, setState }}>
-    <div className={Styles.dragonListWrapper}>
-      <div className={Styles.contentWrapper}>
-        <h2>Dragons</h2>
-        <DragonList />
+    <DragonsContext.Provider value={{ state, setState }}>
+      <div className={Styles.dragonListWrapper}>
+        <div className={Styles.contentWrapper}>
+          <h2>Dragons</h2>
+          {state.error
+            ? (
+            <Error error={state.error} reload={() => ''} />
+              )
+            : (
+            <DragonList />
+              )}
+        </div>
       </div>
-    </div>
     </DragonsContext.Provider>
   )
 }
