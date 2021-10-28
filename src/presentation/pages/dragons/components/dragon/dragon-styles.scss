@@ -1,0 +1,111 @@
+@import '../../../../styles/colors';
+
+.dragonContent {
+  height: 220px;
+  border-radius: 5px 5px 0 0;
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(
+      to right,
+      rgba($primaryLight, 0.1),
+      rgba($primaryLight, 0.1)
+    ),
+    linear-gradient(to right, $white, $white);
+  background-position: 0 0, 50 0;
+  background-size: 50px 100%, 100% 100%;
+  position: relative;
+
+  .actions {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 90px;
+    padding: 0.4rem;
+    display: flex;
+    justify-content: space-between;
+
+    svg {
+      color: $link;
+      cursor: pointer;
+
+      &:hover {
+        color: $callToAction;
+      }
+    }
+  }
+  .dragonInfoWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+    margin: 80px 1.4rem 1.4rem 1.4rem;
+
+    h2 {
+      color: $black;
+    }
+  }
+
+  time {
+    display: flex;
+    flex-direction: column;
+    background-color: $primaryLight;
+    color: $white;
+    border-radius: 5px;
+    margin-left: 1.4rem;
+    align-self: center;
+    align-items: center;
+    flex-shrink: 0;
+    justify-content: center;
+    width: 4rem;
+    height: 6rem;
+
+    .day {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .month {
+      text-transform: lowercase;
+      margin: 0 0 5px;
+    }
+
+    .year {
+      font-size: 1rem;
+    }
+  }
+  p {
+    font-size: 1.1rem;
+    align-self: center;
+    color: $black;
+  }
+}
+
+footer {
+  background-color: $primary;
+  color: $white;
+  line-height: 40px;
+  text-transform: lowercase;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 0 0 5px 5px;
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media only screen and (min-width: 400px) {
+  .dragonContent {
+    .dragonInfoWrapper {
+      justify-content: center;
+      margin: 0 !important;
+    }
+  }
+}
