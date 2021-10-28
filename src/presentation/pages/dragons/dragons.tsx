@@ -1,40 +1,56 @@
-import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
-import Styles from './dragon-styles.scss'
+import React, { useEffect, useState } from 'react'
+import Styles from './dragons-styles.scss'
+import { GetDragons } from '@/domain/usecases/get-dragons'
+import { Dragon } from '@/domain/models'
+import { DragonCard } from './components'
 
-const Dragons: React.FC = () => {
+type Props = {
+  getDragons: GetDragons
+}
+
+type StateTypes = {
+  dragons: Dragon[]
+  isLoading: boolean
+  error: null | string
+}
+
+const Dragons: React.FC<Props> = ({ getDragons }) => {
+  const [state, setState] = useState<StateTypes>({
+    dragons: [],
+    isLoading: false,
+    error: null
+  })
+
+  useEffect(() => {
+    setState((prevState) => ({ ...prevState, isLoading: true }))
+    getDragons
+      .get()
+      .then((response) => {
+        setState((prevState) => ({
+          ...prevState,
+          dragons: response,
+          isLoading: false
+        }))
+      })
+      .catch((error) => console.log(error))
+  }, [])
+
   return (
     <div className={Styles.dragonListWrapper}>
       <div className={Styles.contentWrapper}>
         <h2>Dragons</h2>
         <ul data-testid="dragons-list">
-          <li>
-            <div className={Styles.dragonContent}>
-              <div className={Styles.actions}>
-                <FontAwesomeIcon title="Editar Dragão" icon={faEdit} size="2x"/>
-                <FontAwesomeIcon title="Excluir Dragão" icon={faTrash} size="2x"/>
-              </div>
-              <time>
-                <span className={Styles.day}>03</span>
-                <span className={Styles.month}>07</span>
-                <span className={Styles.year}>2021</span>
-              </time>
-              <div className={Styles.dragonInfoWrapper}>
-                <h2>Nome</h2>
-                <p>Bob Marley</p>
-              </div>
-              <div className={Styles.dragonInfoWrapper}>
-                <h2>Tipo</h2>
-                <p>lavender</p>
-              </div>
-            </div>
-            <footer>Detalhes</footer>
-          </li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
+          {state.dragons.map((dragon, i) => (
+            <DragonCard key={i} dragon={dragon} />
+          ))}
+          {state.isLoading && (
+            <>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+            </>
+          )}
         </ul>
       </div>
     </div>
