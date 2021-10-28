@@ -4,6 +4,7 @@ import { ExcludeDragon } from '@/domain/usecases/exclude-dragon'
 import { RemoteExcludeDragon } from './remote-exclude-dragons'
 import { HttpStatusCode } from '@/data/protocols'
 import { UnexpectedError } from '@/domain/errors'
+import { mockedDragons } from '@/domain/test'
 
 const URL = mockedUrl()
 
@@ -52,5 +53,16 @@ describe('RemoteGetDragons', () => {
     const params = faker.datatype.uuid()
     const promise = sut.delete(params)
     await expect(promise).rejects.toThrow(new UnexpectedError())
+  })
+  test('should return the excluded Dragon on success (200)', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    const params = faker.datatype.uuid()
+    const responseBody = mockedDragons()[0]
+    httpClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: responseBody
+    }
+    const httpResponse = await sut.delete(params)
+    expect(httpResponse).toEqual(responseBody)
   })
 })
