@@ -1,5 +1,6 @@
 import { HttpClient, HttpStatusCode } from '@/data/protocols'
 import { UnexpectedError } from '@/domain/errors'
+import { Dragon } from '@/domain/models'
 import { ExcludeDragon } from '@/domain/usecases/exclude-dragon'
 
 export class RemoteExcludeDragon implements ExcludeDragon {
@@ -8,7 +9,7 @@ export class RemoteExcludeDragon implements ExcludeDragon {
     private readonly httpClient: HttpClient
   ) {}
 
-  async delete (id: string): Promise<void> {
+  async delete (id: string): Promise<Dragon> {
     const httpResponse = await this.httpClient.request({
       url: this.url,
       method: 'DELETE',
