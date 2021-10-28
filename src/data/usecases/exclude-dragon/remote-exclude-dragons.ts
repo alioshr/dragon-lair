@@ -10,7 +10,8 @@ export class RemoteExcludeDragon implements ExcludeDragon {
   async delete (id: string): Promise<void> {
     await this.httpClient.request({
       url: this.url,
-      method: 'DELETE'
+      method: 'DELETE',
+      params: id
     })
     return await Promise.resolve(null as any)
   }
