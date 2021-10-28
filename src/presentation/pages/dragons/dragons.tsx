@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Styles from './dragons-styles.scss'
-import { GetDragons } from '@/domain/usecases/get-dragons'
+import { GetDragons, ExcludeDragon } from '@/domain/usecases/'
 import { DragonList } from './components'
 import DragonsContext, {
   StateTypes
@@ -9,9 +9,10 @@ import { Error } from '@/presentation/components'
 
 type Props = {
   getDragons: GetDragons
+  excludeDragon: ExcludeDragon
 }
 
-const Dragons: React.FC<Props> = ({ getDragons }) => {
+const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
   const [state, setState] = useState<StateTypes>({
     dragons: [],
     isLoading: false,
@@ -46,6 +47,11 @@ const Dragons: React.FC<Props> = ({ getDragons }) => {
       })
   }, [state.reload])
 
+  const handleExclusion = async (id: string): Promise<void> => {
+    console.log('excludee', id)
+    await excludeDragon.delete(id)
+  }
+
   return (
     <DragonsContext.Provider value={{ state, setState }}>
       <div className={Styles.dragonListWrapper}>
@@ -56,7 +62,7 @@ const Dragons: React.FC<Props> = ({ getDragons }) => {
             <Error error={state.error} reload={reload} />
               )
             : (
-            <DragonList />
+            <DragonList exclude={handleExclusion}/>
               )}
         </div>
       </div>

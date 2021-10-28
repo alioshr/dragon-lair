@@ -7,15 +7,22 @@ import { useTruncate } from '@/presentation/hooks'
 
 type Props = {
   dragon: Dragon
+  exclude: (id: string) => any
 }
 
-const DragonCard: React.FC<Props> = ({ dragon }) => {
+const DragonCard: React.FC<Props> = ({ dragon, exclude }) => {
   return (
     <li>
       <div className={Styles.dragonContent}>
         <div className={Styles.actions}>
           <FontAwesomeIcon title="Editar Dragão" icon={faEdit} size="2x" />
-          <FontAwesomeIcon title="Excluir Dragão" icon={faTrash} size="2x" />
+          <FontAwesomeIcon
+            onClick={() => exclude(dragon.id)}
+            data-testid={`exclude-${dragon.id}`}
+            title="Excluir Dragão"
+            icon={faTrash}
+            size="2x"
+          />
         </div>
         <time>
           <span className={Styles.day}>
@@ -30,9 +37,9 @@ const DragonCard: React.FC<Props> = ({ dragon }) => {
         </time>
         <div className={Styles.infoWrapper}>
           <div className={Styles.infoCard}>
-          <h2>Nome</h2>
-          <p>{useTruncate(dragon.name, 80)}</p>
-        </div>
+            <h2>Nome</h2>
+            <p>{useTruncate(dragon.name, 80)}</p>
+          </div>
         </div>
       </div>
       <footer>Detalhes</footer>
