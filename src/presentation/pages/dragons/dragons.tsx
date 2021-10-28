@@ -15,8 +15,16 @@ const Dragons: React.FC<Props> = ({ getDragons }) => {
   const [state, setState] = useState<StateTypes>({
     dragons: [],
     isLoading: false,
-    error: null
+    error: null,
+    reload: false
   })
+
+  const reload = (): void => setState((prevState) => ({
+    ...prevState,
+    dragons: [],
+    error: '',
+    reload: !state.reload
+  }))
 
   useEffect(() => {
     setState((prevState) => ({ ...prevState, isLoading: true }))
@@ -36,7 +44,7 @@ const Dragons: React.FC<Props> = ({ getDragons }) => {
           error: error.message
         }))
       })
-  }, [])
+  }, [state.reload])
 
   return (
     <DragonsContext.Provider value={{ state, setState }}>
@@ -45,7 +53,7 @@ const Dragons: React.FC<Props> = ({ getDragons }) => {
           <h2>Dragons</h2>
           {state.error
             ? (
-            <Error error={state.error} reload={() => ''} />
+            <Error error={state.error} reload={reload} />
               )
             : (
             <DragonList />

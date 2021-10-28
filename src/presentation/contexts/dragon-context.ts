@@ -5,6 +5,7 @@ export type StateTypes = {
   dragons: Dragon[]
   isLoading: boolean
   error: null | string
+  reload: boolean
 }
 
 export type DragonStateTypes = {
