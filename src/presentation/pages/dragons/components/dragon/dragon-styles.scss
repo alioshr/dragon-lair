@@ -44,17 +44,17 @@
     justify-content: center;
     flex-grow: 1;
 
-  .infoCard {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 0;
+    .infoCard {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 0;
 
-    h2 {
-      color: $black;
+      h2 {
+        color: $black;
+      }
     }
   }
-}
 
   time {
     display: flex;
@@ -104,9 +104,12 @@ footer {
   }
 }
 
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
+@media only screen and (min-width: 400px) {
+  .dragonContent {
+    .dragonInfoWrapper {
+      justify-content: center;
+      margin: 0 !important;
+    }
   }
 }
 
@@ -118,10 +121,10 @@ footer {
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
-    .infoCard {
-      justify-content: center;
-      margin: 0 !important;
+      .infoCard {
+        justify-content: center;
+        margin: 0 !important;
+      }
     }
-  }
   }
 }

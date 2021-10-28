@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import Styles from './dragons-styles.scss'
 import { GetDragons } from '@/domain/usecases/get-dragons'
-import { Dragon } from '@/domain/models'
-import { DragonCard } from './components'
+import { DragonList } from './components'
+import DragonsContext, {
+  StateTypes
+} from '@/presentation/contexts/dragon-context'
 
 type Props = {
   getDragons: GetDragons
-}
-
-type StateTypes = {
-  dragons: Dragon[]
-  isLoading: boolean
-  error: null | string
 }
 
 const Dragons: React.FC<Props> = ({ getDragons }) => {
@@ -36,24 +32,15 @@ const Dragons: React.FC<Props> = ({ getDragons }) => {
   }, [])
 
   return (
+    <DragonsContext.Provider
+    value={{ state, setState }}>
     <div className={Styles.dragonListWrapper}>
       <div className={Styles.contentWrapper}>
         <h2>Dragons</h2>
-        <ul data-testid="dragons-list">
-          {state.dragons.map((dragon, i) => (
-            <DragonCard key={i} dragon={dragon} />
-          ))}
-          {state.isLoading && (
-            <>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-            </>
-          )}
-        </ul>
+        <DragonList />
       </div>
     </div>
+    </DragonsContext.Provider>
   )
 }
 
