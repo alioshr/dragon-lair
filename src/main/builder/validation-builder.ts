@@ -1,5 +1,6 @@
 import { FieldValidation } from '@/validation/protocols'
 import { RequiredFieldValidator, MinLengthValidator } from '@/validation/validators'
+import { NotEqualFieldValidator } from '@/validation/validators/'
 
 export class ValidationBuilder {
   private constructor (
@@ -18,6 +19,11 @@ export class ValidationBuilder {
 
   min (length: number): ValidationBuilder {
     this.validations.push(new MinLengthValidator(this.fieldName, length))
+    return this
+  }
+
+  notEqual (fieldToCompare: string): ValidationBuilder {
+    this.validations.push(new NotEqualFieldValidator(this.fieldName, fieldToCompare))
     return this
   }
 

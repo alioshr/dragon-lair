@@ -1,4 +1,4 @@
-import { RequiredFieldValidator, MinLengthValidator } from '@/validation/validators'
+import { RequiredFieldValidator, MinLengthValidator, NotEqualFieldValidator } from '@/validation/validators'
 import { ValidationBuilder as sut } from './validation-builder'
 import faker from 'faker'
 
@@ -25,5 +25,11 @@ describe('ValidationBuilder', () => {
       .build()
     expect(validations).toEqual([new MinLengthValidator(field, length), new RequiredFieldValidator(field)])
     expect(validations.length).toBe(2)
+  })
+  test('Should call NotEqualFieldValidator with the correct params', () => {
+    const validations = sut.fieldName(field)
+      .notEqual('fieldToCompare')
+      .build()
+    expect(validations).toEqual([new NotEqualFieldValidator(field, 'fieldToCompare')])
   })
 })
