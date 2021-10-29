@@ -7,19 +7,26 @@ type Props = {
   makeLogin: React.FC
   makeDragons: React.FC
   updateDragon: React.FC
+  detailsPage: React.FC
 }
 
-const Router: React.FC<Props> = ({ makeLogin, makeDragons, updateDragon }) => {
+const Router: React.FC<Props> = ({
+  makeLogin,
+  makeDragons,
+  updateDragon,
+  detailsPage
+}) => {
   return (
-    <Header>
-      <BrowserRouter>
+    <BrowserRouter>
+      <Header>
         <Switch>
           <Route path="/" exact component={makeDragons} />
           <Route path="/login" exact component={makeLogin} />
           <Route path="/update/:id" exact component={updateDragon} />
+          <Route path="/details/:id" exact component={detailsPage} />
         </Switch>
-      </BrowserRouter>
-    </Header>
+      </Header>
+    </BrowserRouter>
   )
 }
 
