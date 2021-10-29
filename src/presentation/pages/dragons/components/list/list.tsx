@@ -11,7 +11,7 @@ const List: React.FC = () => {
   {state.dragons.map((dragon, i) => (
     <DragonCard key={i} dragon={dragon} />
   ))}
-  {state.isLoading && (
+  {state.isLoading && !state.id && (
     <Skeleton />
   )}
 </ul>

@@ -20,7 +20,7 @@ const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
     isLoading: false,
     error: null,
     reload: false,
-    id: ''
+    id: null
   })
 
   const reload = (): void => setState((prevState) => ({
@@ -61,9 +61,14 @@ const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
   useEffect(() => {
     if (skipCount) setSkipCount(false)
     if (!skipCount) {
-      handleExclusion(state.id)
+      handleExclusion(state.id as string)
         .then(() => {
-
+          setState((prevState) => ({
+            ...prevState,
+            isLoading: false,
+            dragons: state.dragons.filter(dragon => dragon.id !== state.id),
+            id: null
+          }))
         })
         .catch((error) => {
           setState((prevState) => ({
