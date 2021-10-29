@@ -60,8 +60,8 @@ const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
 
   useEffect(() => {
     if (skipCount) setSkipCount(false)
-    if (!skipCount) {
-      handleExclusion(state.id as string)
+    if (!skipCount && state.id) {
+      handleExclusion(state.id)
         .then(() => {
           setState((prevState) => ({
             ...prevState,
