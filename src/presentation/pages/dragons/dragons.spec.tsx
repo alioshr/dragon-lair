@@ -7,34 +7,10 @@ import {
   waitFor
 } from '@testing-library/react'
 import { Dragons } from '..'
-import { GetDragons } from '@/domain/usecases/get-dragons'
-import { Dragon } from '@/domain/models'
 import { mockedDragons } from '@/domain/test'
-import { ExcludeDragon } from '@/domain/usecases'
+import { ExcludeDragonSpy, GetDragonsSpy } from '@/presentation/test'
 
 const DRAGONS = mockedDragons()
-
-class GetDragonsSpy implements GetDragons {
-  callCount = 0
-  id: string | undefined = ''
-  dragons = DRAGONS
-  async get (id?: string): Promise<Dragon[]> {
-    this.id = id
-    this.callCount = this.callCount + 1
-    return await Promise.resolve(this.dragons)
-  }
-}
-
-class ExcludeDragonSpy implements ExcludeDragon {
-  callCount = 0
-  id: string | undefined = ''
-  dragon = mockedDragons()[0]
-  async delete (id: string): Promise<Dragon> {
-    this.id = id
-    this.callCount = this.callCount + 1
-    return await Promise.resolve(this.dragon)
-  }
-}
 
 type SutTypes = {
   sut: RenderResult
@@ -43,7 +19,7 @@ type SutTypes = {
 }
 
 const makeSut = (
-  getDragonsSpy = new GetDragonsSpy(),
+  getDragonsSpy = new GetDragonsSpy(DRAGONS),
   excludeDragonSpy = new ExcludeDragonSpy()
 ): SutTypes => {
   const sut = render(
@@ -72,7 +48,7 @@ describe('Dragons', () => {
     expect(getDragonsSpy.callCount).toBe(1)
   })
   test('should present an error if GetDragons fails', async () => {
-    const getDragonsSpy = new GetDragonsSpy()
+    const getDragonsSpy = new GetDragonsSpy(DRAGONS)
     jest
       .spyOn(getDragonsSpy, 'get')
       .mockRejectedValueOnce(new Error('horrible error'))
@@ -82,7 +58,7 @@ describe('Dragons', () => {
     expect(screen.getByTestId('error')).toBeTruthy()
   })
   test('Should call GetDragons on reload', async () => {
-    const getDragonsSpy = new GetDragonsSpy()
+    const getDragonsSpy = new GetDragonsSpy(DRAGONS)
     jest
       .spyOn(getDragonsSpy, 'get')
       .mockRejectedValueOnce(new Error('horrible error'))
@@ -127,7 +103,7 @@ describe('Dragons', () => {
     jest
       .spyOn(excludeDragonSpy, 'delete')
       .mockRejectedValueOnce(new Error('horrible error'))
-    makeSut(new GetDragonsSpy(), excludeDragonSpy)
+    makeSut(new GetDragonsSpy(DRAGONS), excludeDragonSpy)
     const dragonList = screen.getByTestId('dragons-list')
     await waitFor(() => dragonList)
     const excludeButton = screen.getByTestId(`exclude-${DRAGONS[0].id}`)
