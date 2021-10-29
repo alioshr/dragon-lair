@@ -20,6 +20,15 @@ textarea {
   border: none;
 }
 
+svg {
+  color: $link;
+  cursor: pointer;
+
+  &:hover {
+    color: $callToAction;
+  }
+}
+
 button {
   background-color: $primary;
   border-radius: 8px;
