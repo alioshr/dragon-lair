@@ -9,11 +9,10 @@ export class RemoteGetDragons implements GetDragons {
     private readonly httpClient: HttpClient
   ) {}
 
-  async get (id?: string): Promise<Dragon[]> {
+  async get (): Promise<Dragon[]> {
     const httpResponse = await this.httpClient.request({
       url: this.url,
-      method: 'GET',
-      params: id
+      method: 'GET'
     })
 
     switch (httpResponse.statusCode) {
