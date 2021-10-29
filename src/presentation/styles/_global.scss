@@ -14,7 +14,8 @@ body {
 
 input[type='email'],
 input[type='password'],
-input[type='text'] {
+input[type='text'],
+textarea {
   outline: none;
   border: none;
 }
