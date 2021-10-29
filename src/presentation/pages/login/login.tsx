@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import Styles from './login-styles.scss'
 import { FormStatus, Input } from '@/presentation/components'
 import { Validator } from '@/presentation/protocols'
-import FormContext, {
+import LoginContext, {
   StateTypes,
   ErrorStateTypes
-} from '@/presentation/contexts/form-context'
+} from '@/presentation/contexts/login-context'
 import { SaveAccessToken } from '@/domain/usecases'
 import { useHistory } from 'react-router-dom'
 
@@ -54,9 +54,9 @@ const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
   }
 
   return (
-    <FormContext.Provider
+    <LoginContext.Provider
       value={{
-        formState: [state, setState],
+        state: [state, setState],
         errorState: [errorState, setErrorState]
       }}
     >
@@ -65,10 +65,24 @@ const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
           data-testid="login-form"
           className={Styles.form}
           onSubmit={loginHandler}
-          >
+        >
           <h2>Bem vindo(a)</h2>
-          <Input type="text" name="name" placeholder="Nome de usuário" />
-          <Input type="password" name="password" placeholder="Senha" />
+          <Input
+            inputProps={{
+              type: 'text',
+              name: 'name',
+              placeholder: 'Nome de usuário'
+            }}
+            context={LoginContext}
+          />
+          <Input
+            inputProps={{
+              type: 'password',
+              name: 'password',
+              placeholder: 'Senha'
+            }}
+            context={LoginContext}
+          />
           <button
             disabled={!!errorState.name || !!errorState.password}
             data-testid="submit-button"
@@ -76,10 +90,10 @@ const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
           >
             Entrar
           </button>
-          <FormStatus />
+          <FormStatus context={LoginContext} />
         </form>
       </div>
-    </FormContext.Provider>
+    </LoginContext.Provider>
   )
 }
 
