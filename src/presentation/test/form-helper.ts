@@ -1,5 +1,5 @@
 import faker from 'faker'
-import { RenderResult, waitFor, fireEvent } from '@testing-library/react'
+import { RenderResult, waitFor, fireEvent, screen } from '@testing-library/react'
 
 export const testChildCount = async (
   sut: RenderResult,
@@ -12,12 +12,11 @@ export const testChildCount = async (
 }
 
 export const testButtonDisabled = (
-  sut: RenderResult,
   testId: string,
   isDisabled: boolean
 ): void => {
-  const button = sut.getByTestId(testId) as HTMLButtonElement
-  expect(button.disabled).toBe(isDisabled)
+  const button = screen.getByTestId(testId)
+  expect((button as HTMLButtonElement).disabled).toBe(isDisabled)
 }
 
 export const testStatusForField = (
