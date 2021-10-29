@@ -5,8 +5,16 @@ import UpdateDragonContext, {
   ErrorStateTypes,
   StateTypes
 } from '@/presentation/contexts/update-dragon-context'
+import { GetDragon } from '@/domain/usecases'
+import { useParams } from 'react-router-dom'
 
-const UpdateDragon: React.FC = () => {
+type Props = {
+  getDragon: GetDragon
+}
+
+const UpdateDragon: React.FC<Props> = ({ getDragon }) => {
+  const { id } = useParams<{id: string}>()
+
   const [state, setState] = useState<StateTypes>({
     name: '',
     type: '',
@@ -20,8 +28,8 @@ const UpdateDragon: React.FC = () => {
   })
 
   useEffect(() => {
-
-  })
+    getDragon.get(id).then().catch(err => console.log(err))
+  }, [])
 
   return (
     <UpdateDragonContext.Provider
