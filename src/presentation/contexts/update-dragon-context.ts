@@ -7,8 +7,8 @@ export type StateTypes = {
 }
 
 export type ErrorStateTypes = {
-  name: string
-  type: string
+  name: string | null
+  type: string | null
   main: string | null
 }
 
