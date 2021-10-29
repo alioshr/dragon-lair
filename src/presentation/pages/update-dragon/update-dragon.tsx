@@ -32,7 +32,14 @@ const UpdateDragon: React.FC<Props> = ({ getDragon }) => {
     setState((prevState) => ({ ...prevState, isLoading: true }))
     getDragon
       .get(id)
-      .then()
+      .then((dragon) => {
+        setState((prevState) => ({
+          ...prevState,
+          isLoading: false,
+          name: dragon.name,
+          type: dragon.type
+        }))
+      })
       .catch((err) => console.log(err))
   }, [])
 
@@ -55,18 +62,20 @@ const UpdateDragon: React.FC<Props> = ({ getDragon }) => {
               inputProps={{
                 type: 'text',
                 name: 'name',
-                placeholder: 'Nome do dragão'
+                placeholder: 'Nome do dragão',
+                value: state.name
               }}
               context={UpdateDragonContext}
             />
             <TextArea
               inputProps={{
                 name: 'type',
-                placeholder: 'Tipo do dragão'
+                placeholder: 'Tipo do dragão',
+                value: state.type
               }}
               context={UpdateDragonContext}
             />
-            <button data-testid="submit-button" type="submit">
+            <button disabled data-testid="submit-button" type="submit">
               Atualizar
             </button>
             <FormStatus context={UpdateDragonContext} />
