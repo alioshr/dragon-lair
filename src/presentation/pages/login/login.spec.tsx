@@ -57,7 +57,7 @@ const makeSut = (validationError?: string): SutTypes => {
 describe('Login', () => {
   test('Should init with the correct initial state', () => {
     const { sut } = makeSut(VALIDATION_ERROR_MESSAGE)
-    Helper.testButtonDisabled(sut, 'submit-button', true)
+    Helper.testButtonDisabled('submit-button', true)
     Helper.testStatusForField(sut, 'name', 'default', VALIDATION_ERROR_MESSAGE)
     Helper.testStatusForField(
       sut,
@@ -114,7 +114,7 @@ describe('Login', () => {
     const { sut } = makeSut()
     Helper.populateField(sut, 'password', CREDENTIALS.password)
     Helper.populateField(sut, 'name', CREDENTIALS.name)
-    Helper.testButtonDisabled(sut, 'submit-button', false)
+    Helper.testButtonDisabled('submit-button', false)
   })
   test('Should call SaveAccessToken with user name on success', async () => {
     const { sut, saveAccessTokenStub } = makeSut()
