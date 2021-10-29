@@ -122,4 +122,18 @@ describe('Dragons', () => {
     const dragons = dragonList.querySelectorAll('div.dragonContent')
     expect(dragons.length).toBe(2)
   })
+  test('Should present error if exclusion fails', async () => {
+    const excludeDragonSpy = new ExcludeDragonSpy()
+    jest
+      .spyOn(excludeDragonSpy, 'delete')
+      .mockRejectedValueOnce(new Error('horrible error'))
+    makeSut(new GetDragonsSpy(), excludeDragonSpy)
+    const dragonList = screen.getByTestId('dragons-list')
+    await waitFor(() => dragonList)
+    const excludeButton = screen.getByTestId(`exclude-${DRAGONS[0].id}`)
+    fireEvent.click(excludeButton)
+    await waitFor(() => dragonList)
+    expect(screen.getByTestId('error')).toBeTruthy()
+    expect(screen.getByTestId('error').textContent).toBe('horrible error')
+  })
 })
