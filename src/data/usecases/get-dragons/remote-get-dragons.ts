@@ -4,7 +4,8 @@ import { Dragon } from '@/domain/models'
 import { GetDragons } from '@/domain/usecases/get-dragons'
 
 export class RemoteGetDragons implements GetDragons {
-  constructor (private readonly url: string,
+  constructor (
+    private readonly url: string,
     private readonly httpClient: HttpClient
   ) {}
 
