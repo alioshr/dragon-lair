@@ -5,7 +5,7 @@ export type UpdateDragonTypes = {
   type: string
 }
 
-type UpdateDragonDTO = {
+export type UpdateDragonDTO = {
   id: string
   body: UpdateDragonTypes
 }
