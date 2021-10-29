@@ -5,6 +5,7 @@ export class HttpClientSpy implements HttpClient {
   url: string = ''
   method: string = ''
   params: any = null
+  body: any = null
   response: HttpResponse = {
     statusCode: HttpStatusCode.ok
   }
@@ -13,6 +14,7 @@ export class HttpClientSpy implements HttpClient {
     this.url = data.url
     this.method = data.method
     this.params = data.params
+    this.body = data.body
     return this.response
   }
 }
