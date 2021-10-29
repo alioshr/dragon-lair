@@ -8,18 +8,17 @@ import DragonContext, { DragonStateTypes } from '@/presentation/contexts/dragon-
 
 type Props = {
   dragon: Dragon
-  exclude: (id: string) => any
 }
 
-const DragonCard: React.FC<Props> = ({ dragon, exclude }) => {
-  const { state } = useContext<DragonStateTypes>(DragonContext)
+const DragonCard: React.FC<Props> = ({ dragon }) => {
+  const { state, setState } = useContext<DragonStateTypes>(DragonContext)
 
   return (
     <li>
       <div className={Styles.dragonContent}>
         <div className={Styles.actions}>
           <FontAwesomeIcon title="Editar Dragão" icon={faEdit} size="2x" />
-          { state.isLoading
+          { state.isLoading && state.id === dragon.id
             ? <FontAwesomeIcon
             data-testid={`spinner-${dragon.id}`}
             icon={faSpinner}
@@ -28,7 +27,7 @@ const DragonCard: React.FC<Props> = ({ dragon, exclude }) => {
             size="2x" />
             : <FontAwesomeIcon
             className="exclude"
-            onClick={() => exclude(dragon.id)}
+            onClick={() => setState((prevState) => ({ ...prevState, id: dragon.id }))}
             data-testid={`exclude-${dragon.id}`}
             title="Excluir Dragão"
             icon={faTrash}

@@ -4,16 +4,12 @@ import { DragonCard } from '..'
 import Skeleton from '../skeleton/skeleton'
 import './list-styles.scss'
 
-type Props = {
-  exclude: (id: string) => any
-}
-
-const List: React.FC<Props> = ({ exclude }) => {
+const List: React.FC = () => {
   const { state } = useContext<DragonStateTypes>(DragonContext)
 
   return <ul data-testid="dragons-list">
   {state.dragons.map((dragon, i) => (
-    <DragonCard exclude={exclude} key={i} dragon={dragon} />
+    <DragonCard key={i} dragon={dragon} />
   ))}
   {state.isLoading && (
     <Skeleton />
