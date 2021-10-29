@@ -1,4 +1,5 @@
-import { HttpClient } from '@/data/protocols'
+import { HttpClient, HttpStatusCode } from '@/data/protocols'
+import { UnexpectedError } from '@/domain/errors'
 import { Dragon } from '@/domain/models'
 import { UpdateDragon, UpdateDragonDTO } from '@/domain/usecases/update-dragon'
 
@@ -8,12 +9,15 @@ export class RemoteUpdateDragon implements UpdateDragon {
   ) {}
 
   async update (data: UpdateDragonDTO): Promise<Dragon> {
-    await this.httpClient.request({
+    const httpResponse = await this.httpClient.request({
       url: this.url,
       method: 'PUT',
       body: data.body,
       params: data.id
     })
-    return await Promise.resolve(null as any)
+    switch (httpResponse.statusCode) {
+      case HttpStatusCode.ok: return httpResponse.body
+      default: throw new UnexpectedError()
+    }
   }
 }
