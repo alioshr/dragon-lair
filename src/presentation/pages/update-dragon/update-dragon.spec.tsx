@@ -2,7 +2,7 @@ import { mockedDragons } from '@/domain/test'
 import { GetDragonSpy } from '@/presentation/test/get-dragon-spy'
 import React from 'react'
 import { UpdateDragon } from '..'
-import { render, RenderResult } from '@testing-library/react'
+import { render, RenderResult, screen } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router'
 import { Route } from 'react-router-dom'
@@ -32,5 +32,14 @@ describe('UpdateDragon', () => {
     const { getDragonSpy } = makeSut()
     expect(getDragonSpy.callCount).toBe(1)
     expect(getDragonSpy.id).toBe('1')
+  })
+  test('should present a skeleton while getting the dragon', () => {
+    makeSut()
+    const wrapper = screen.getByTestId('wrapper')
+    const skeleton = wrapper.querySelector('div.skeleton')
+    const form = wrapper.querySelector('form')
+
+    expect(skeleton).toBeTruthy()
+    expect(form).toBeNull()
   })
 })
