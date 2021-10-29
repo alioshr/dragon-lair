@@ -1,4 +1,3 @@
-import { Input, FormStatus, TextArea } from '@/presentation/components'
 import React, { useEffect, useState } from 'react'
 import Styles from './update-dragon-styles.scss'
 import UpdateDragonContext, {
@@ -6,15 +5,31 @@ import UpdateDragonContext, {
   StateTypes
 } from '@/presentation/contexts/update-dragon-context'
 import { GetDragon } from '@/domain/usecases'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import Skeleton from './components/skeleton/skeleton'
+import { Validator } from '@/presentation/protocols'
+import { UpdateDragon } from '@/domain/usecases/update-dragon'
+import Form from './components/form/form'
 
 type Props = {
   getDragon: GetDragon
+  validator: Validator
+  updateDragon: UpdateDragon
 }
 
-const UpdateDragon: React.FC<Props> = ({ getDragon }) => {
+const UpdateDragonPage: React.FC<Props> = ({
+  getDragon,
+  validator,
+  updateDragon
+}) => {
   const { id } = useParams<{ id: string }>()
+  const history = useHistory()
+  const [skipCount, setSkipCount] = useState(true)
+
+  const [defaultData, setDefault] = useState({
+    type: '',
+    name: ''
+  })
 
   const [state, setState] = useState<StateTypes>({
     name: '',
@@ -29,10 +44,37 @@ const UpdateDragon: React.FC<Props> = ({ getDragon }) => {
   })
 
   useEffect(() => {
+    if (skipCount) setSkipCount(false)
+    if (!skipCount) {
+      const nameState = {
+        name: state.name,
+        defaultName: defaultData.name
+      }
+      const typeState = {
+        type: state.type,
+        defaultType: defaultData.type
+      }
+      const nameError = validator.validate('name', nameState)
+      const typeError = validator.validate('type', typeState)
+      const invalidForm = nameError && typeError
+      setErrorState((prevState) => ({
+        ...prevState,
+        name: invalidForm && nameError,
+        type: invalidForm && typeError
+      }))
+    }
+  }, [state.name, state.type])
+
+  useEffect(() => {
     setState((prevState) => ({ ...prevState, isLoading: true }))
     getDragon
       .get(id)
       .then((dragon) => {
+        setDefault((prevState) => ({
+          ...prevState,
+          name: dragon.name,
+          type: dragon.type
+        }))
         setState((prevState) => ({
           ...prevState,
           isLoading: false,
@@ -43,6 +85,32 @@ const UpdateDragon: React.FC<Props> = ({ getDragon }) => {
       .catch((err) => console.log(err))
   }, [])
 
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    event.preventDefault()
+    try {
+      setState((prevState) => ({
+        ...prevState,
+        isLoading: true
+      }))
+      await updateDragon.update({
+        id,
+        body: {
+          type: state.type,
+          name: state.name
+        }
+      })
+      history.replace('/')
+    } catch (error) {
+      setState((prevState) => ({
+        ...prevState,
+        isLoading: false,
+        main: (error as Error).message
+      }))
+    }
+  }
+
   return (
     <UpdateDragonContext.Provider
       value={{
@@ -51,39 +119,10 @@ const UpdateDragon: React.FC<Props> = ({ getDragon }) => {
       }}
     >
       <div className={Styles.wrapper} data-testid="wrapper">
-        {state.isLoading
-          ? (
-          <Skeleton />
-            )
-          : (
-          <form data-testid="form" className={Styles.form}>
-            <h2>Atualizar Dragão (NOME)</h2>
-            <Input
-              inputProps={{
-                type: 'text',
-                name: 'name',
-                placeholder: 'Nome do dragão',
-                value: state.name
-              }}
-              context={UpdateDragonContext}
-            />
-            <TextArea
-              inputProps={{
-                name: 'type',
-                placeholder: 'Tipo do dragão',
-                value: state.type
-              }}
-              context={UpdateDragonContext}
-            />
-            <button disabled data-testid="submit-button" type="submit">
-              Atualizar
-            </button>
-            <FormStatus context={UpdateDragonContext} />
-          </form>
-            )}
+      {state.isLoading && !state.name ? <Skeleton /> : <Form handle={handleSubmit} />}
       </div>
     </UpdateDragonContext.Provider>
   )
 }
 
-export default UpdateDragon
+export default UpdateDragonPage
