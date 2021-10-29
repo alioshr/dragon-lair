@@ -5,6 +5,7 @@ import Styles from './dragon-styles.scss'
 import { Dragon } from '@/domain/models'
 import { useTruncate } from '@/presentation/hooks'
 import DragonContext, { DragonStateTypes } from '@/presentation/contexts/dragon-context'
+import { Link } from 'react-router-dom'
 
 type Props = {
   dragon: Dragon
@@ -17,7 +18,9 @@ const DragonCard: React.FC<Props> = ({ dragon }) => {
     <li>
       <div className={Styles.dragonContent}>
         <div className={Styles.actions}>
+          <Link to={`/update/${dragon.id}`}>
           <FontAwesomeIcon title="Editar Dragão" icon={faEdit} size="2x" />
+          </Link>
           { state.isLoading && state.id === dragon.id
             ? <FontAwesomeIcon
             data-testid={`spinner-${dragon.id}`}
