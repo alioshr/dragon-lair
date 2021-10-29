@@ -28,7 +28,7 @@
     }
   }
   @media (min-width: 40rem) {
-    form {
+    form, div:empty {
       flex-grow: 1;
       max-width: 30rem;
     }
