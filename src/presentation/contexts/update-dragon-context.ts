@@ -1,19 +1,20 @@
 import { createContext, Dispatch, SetStateAction } from 'react'
 
 export type StateTypes = {
-  password: string
   name: string
+  type: string
+  isLoading: boolean
 }
 
 export type ErrorStateTypes = {
-  password: string | null
-  name: string | null
+  name: string
+  type: string
   main: string | null
 }
 
-export type FormStateTypes = {
-  formState: [StateTypes, Dispatch<SetStateAction<StateTypes>>]
+export type UpdateDragonStateTypes = {
+  state: [StateTypes, Dispatch<SetStateAction<StateTypes>>]
   errorState: [ErrorStateTypes, Dispatch<SetStateAction<ErrorStateTypes>>]
 }
 
-export default createContext<FormStateTypes>(null as any)
+export default createContext<UpdateDragonStateTypes>(null as any)
