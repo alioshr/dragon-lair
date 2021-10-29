@@ -9,6 +9,8 @@ import {
 import { Dragons } from '..'
 import { mockedDragons } from '@/domain/test'
 import { ExcludeDragonSpy, GetDragonsSpy } from '@/presentation/test'
+import { Router } from 'react-router'
+import { createMemoryHistory } from 'history'
 
 const DRAGONS = mockedDragons()
 
@@ -17,13 +19,15 @@ type SutTypes = {
   getDragonsSpy: GetDragonsSpy
   excludeDragonSpy: ExcludeDragonSpy
 }
-
+const history = createMemoryHistory({ initialEntries: ['/login'] })
 const makeSut = (
   getDragonsSpy = new GetDragonsSpy(DRAGONS),
   excludeDragonSpy = new ExcludeDragonSpy()
 ): SutTypes => {
   const sut = render(
+    <Router history={history}>
     <Dragons excludeDragon={excludeDragonSpy} getDragons={getDragonsSpy} />
+    </Router>
   )
   return { sut, getDragonsSpy, excludeDragonSpy }
 }
