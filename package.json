@@ -16,7 +16,9 @@
   "author": "Aliosh Romano Pimenta",
   "license": "ISC",
   "devDependencies": {
+    "@testing-library/dom": "^8.10.1",
     "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
     "@types/faker": "^5.5.9",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.11.4",
