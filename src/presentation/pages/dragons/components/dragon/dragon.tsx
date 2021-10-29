@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faEdit, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import Styles from './dragon-styles.scss'
 import { Dragon } from '@/domain/models'
 import { useTruncate } from '@/presentation/hooks'
+import DragonContext, { DragonStateTypes } from '@/presentation/contexts/dragon-context'
 
 type Props = {
   dragon: Dragon
@@ -11,18 +12,28 @@ type Props = {
 }
 
 const DragonCard: React.FC<Props> = ({ dragon, exclude }) => {
+  const { state } = useContext<DragonStateTypes>(DragonContext)
+
   return (
     <li>
       <div className={Styles.dragonContent}>
         <div className={Styles.actions}>
           <FontAwesomeIcon title="Editar Dragão" icon={faEdit} size="2x" />
-          <FontAwesomeIcon
+          { state.isLoading
+            ? <FontAwesomeIcon
+            data-testid={`spinner-${dragon.id}`}
+            icon={faSpinner}
+            className="spinner"
+            spin
+            size="2x" />
+            : <FontAwesomeIcon
+            className="exclude"
             onClick={() => exclude(dragon.id)}
             data-testid={`exclude-${dragon.id}`}
             title="Excluir Dragão"
             icon={faTrash}
             size="2x"
-          />
+          /> }
         </div>
         <time>
           <span className={Styles.day}>

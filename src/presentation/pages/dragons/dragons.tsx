@@ -48,7 +48,10 @@ const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
   }, [state.reload])
 
   const handleExclusion = async (id: string): Promise<void> => {
-    console.log('excludee', id)
+    setState((prevState) => ({
+      ...prevState,
+      isLoading: true
+    }))
     await excludeDragon.delete(id)
   }
 
