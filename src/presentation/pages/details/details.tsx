@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import Styles from './details-styles.scss'
 import { GetDragon } from '@/domain/usecases'
 import { useParams } from 'react-router-dom'
-import Skeleton from './components/skeleton/skeleton'
+import { Error } from '@/presentation/components/'
+import Info from './components/info/info'
 
 type Props = {
   getDragon: GetDragon
@@ -15,7 +16,8 @@ const DetailsDragonPage: React.FC<Props> = ({ getDragon }) => {
     name: '',
     type: '',
     createdAt: null as any,
-    isLoading: false
+    isLoading: false,
+    mainError: ''
   })
 
   useEffect(() => {
@@ -31,33 +33,22 @@ const DetailsDragonPage: React.FC<Props> = ({ getDragon }) => {
           createdAt: dragon.createdAt
         }))
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        setState((prevState) => ({
+          ...prevState,
+          isLoading: false,
+          mainError: (err as Error).message
+        }))
+      })
   }, [])
 
   return (
     <div className={Styles.wrapper} data-testid="wrapper">
-        <div className={Styles.content}>
-        {state.isLoading
-          ? <Skeleton />
-          : <>
-          <h2>Detalhes do dragão</h2>
-          <div className={Styles.info}>
-            <h3>Nome:</h3>
-            <span>{state.name}</span>
-          </div>
-          <div className={Styles.info}>
-            <h3>Tipo:</h3>
-            <span>{state.type}</span>
-          </div>
-          <div className={Styles.info}>
-            <h3>Criado:</h3>
-            <span>
-              {new Date(state.createdAt).getDate()}/
-              {new Date(state.createdAt).getMonth() + 1}/
-              {new Date(state.createdAt).getFullYear()}
-            </span>
-          </div>
-          </> }
+        <div data-testid="content-wrapper" className={Styles.content}>
+        {state.mainError
+          ? <Error error={state.mainError}/>
+          : <Info state={state}/>
+        }
         </div>
           )
     </div>
