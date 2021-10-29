@@ -1,7 +1,7 @@
 import { HttpStatusCode } from '@/data/protocols'
 import { mockedUrl, HttpClientSpy } from '@/data/tests'
 import { UnexpectedError } from '@/domain/errors'
-import { mockedUpdateDragonDTO } from '@/domain/test'
+import { mockedDragons, mockedUpdateDragonDTO } from '@/domain/test'
 import { UpdateDragon } from '@/domain/usecases/update-dragon'
 import { RemoteUpdateDragon } from './remote-update-dragon'
 
@@ -32,5 +32,27 @@ describe('RemoteUpdateDragon', () => {
     httpClientSpy.response = { statusCode: HttpStatusCode.badRequest }
     const promise = sut.update(UPDATE_PARAMS)
     await expect(promise).rejects.toThrow(new UnexpectedError())
+  })
+  test('should throw Unexpected error HttpClient returns 404', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    httpClientSpy.response = { statusCode: HttpStatusCode.notFound }
+    const promise = sut.update(UPDATE_PARAMS)
+    await expect(promise).rejects.toThrow(new UnexpectedError())
+  })
+  test('should throw Unexpected error HttpClient returns 500', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    httpClientSpy.response = { statusCode: HttpStatusCode.serverError }
+    const promise = sut.update(UPDATE_PARAMS)
+    await expect(promise).rejects.toThrow(new UnexpectedError())
+  })
+  test('should return dragons on success (200)', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    const responseBody = mockedDragons()[0]
+    httpClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: responseBody
+    }
+    const httpResponse = await sut.update(UPDATE_PARAMS)
+    expect(httpResponse).toEqual(responseBody)
   })
 })
