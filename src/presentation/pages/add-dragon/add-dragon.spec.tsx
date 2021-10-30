@@ -72,4 +72,11 @@ describe('UpdateDragon', () => {
       validatorSpy.errorMessage as string
     )
   })
+  test('Should call validation with the correct type', async () => {
+    const { sut, validatorSpy } = makeSut(undefined, VALIDATION_ERROR_MESSAGE)
+    makeValidationSpyAssertion(validatorSpy, sut, 'type', {
+      name: '',
+      type: INPUT_DATA.type
+    })
+  })
 })
