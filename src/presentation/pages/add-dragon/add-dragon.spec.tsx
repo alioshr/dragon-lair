@@ -1,5 +1,5 @@
 import { AddDragonSpy, ValidationSpy } from '@/presentation/test'
-import { RenderResult, render, waitFor } from '@testing-library/react'
+import { RenderResult, render, waitFor, fireEvent } from '@testing-library/react'
 import React from 'react'
 import faker from 'faker'
 import { mockedDragons } from '@/domain/test'
@@ -118,5 +118,12 @@ describe('UpdateDragon', () => {
     const form = sut.getByTestId('form')
     await waitFor(() => form)
     expect(addDragonSpy.body).toEqual(INPUT_DATA)
+  })
+  test('Should not call AddDragon if the form is invalid', async () => {
+    const { sut, addDragonSpy } = makeSut(undefined, VALIDATION_ERROR_MESSAGE)
+    const form = sut.getByTestId('form')
+    fireEvent.submit(form)
+    await waitFor(() => form)
+    expect(addDragonSpy.callCount).toBe(0)
   })
 })
