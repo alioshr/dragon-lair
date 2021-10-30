@@ -40,15 +40,16 @@ const AddDragonPage: React.FC<Props> = ({ validator, createDragon }) => {
     }))
   }, [state.name, state.type])
 
-  const handleSubmit = async (): Promise<void> => {
-    setState((prevState) => ({
-      ...prevState,
-      isLoading: true
-    }))
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault()
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     if (errorState.main || errorState.name || errorState.type) {
       return
     }
+    setState((prevState) => ({
+      ...prevState,
+      isLoading: true
+    }))
     try {
       await createDragon.add({ name: state.name, type: state.type })
       history.replace('/')
