@@ -1,5 +1,5 @@
 import React from 'react'
-import Styles from './skeleton-styles.scss'
+import Styles from './dragon-form-skeleton-styles.scss'
 
 const Skeleton: React.FC = () => {
   return (
