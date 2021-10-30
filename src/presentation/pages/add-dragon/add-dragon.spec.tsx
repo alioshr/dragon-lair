@@ -89,4 +89,9 @@ describe('UpdateDragon', () => {
       validatorSpy.errorMessage as string
     )
   })
+  test('Should show a valid name if validation succeeds', () => {
+    const { sut } = makeSut()
+    Helper.populateField(sut, 'name', INPUT_DATA.name)
+    Helper.testStatusForField(sut, 'name', 'valid')
+  })
 })
