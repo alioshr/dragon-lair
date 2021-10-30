@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Styles from './update-dragon-styles.scss'
-import UpdateDragonContext, {
+import DragonFormContext, {
   ErrorStateTypes,
   StateTypes
-} from '@/presentation/contexts/update-dragon-context'
+} from '@/presentation/contexts/dragon-form-context'
 import { GetDragon } from '@/domain/usecases'
 import { useHistory, useParams } from 'react-router-dom'
-import Skeleton from './components/skeleton/skeleton'
+import { DragonFormSkeleton, DragonForm } from '@/presentation/components'
 import { Validator } from '@/presentation/protocols'
 import { UpdateDragon } from '@/domain/usecases/update-dragon'
-import Form from './components/form/form'
 
 type Props = {
   getDragon: GetDragon
@@ -112,16 +111,26 @@ const UpdateDragonPage: React.FC<Props> = ({
   }
 
   return (
-    <UpdateDragonContext.Provider
+    <DragonFormContext.Provider
       value={{
         state: [state, setState],
         errorState: [errorState, setErrorState]
       }}
     >
       <div className={Styles.wrapper} data-testid="wrapper">
-      {state.isLoading && !state.name ? <Skeleton /> : <Form handle={handleSubmit} />}
+        {state.isLoading && !state.name
+          ? (
+          <DragonFormSkeleton />
+            )
+          : (
+          <DragonForm
+            title="Atualizar"
+            context={DragonFormContext}
+            handle={handleSubmit}
+          />
+            )}
       </div>
-    </UpdateDragonContext.Provider>
+    </DragonFormContext.Provider>
   )
 }
 
