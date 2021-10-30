@@ -52,9 +52,8 @@
         }
       }
 
-      .link,
-      .greeting {
-        width: 10rem;
+      .greeting,
+      .link {
         display: flex;
         justify-content: flex-end;
         color: $white;
@@ -62,7 +61,7 @@
 
       .greeting {
         span {
-          margin-right: 1rem;
+          margin: 0 1rem;
         }
 
         span:nth-child(2) {
