@@ -11,13 +11,15 @@ type Props = {
   makeDragons: React.FC
   updateDragon: React.FC
   detailsPage: React.FC
+  addDragon: React.FC
 }
 
 const Router: React.FC<Props> = ({
   makeLogin,
   makeDragons,
   updateDragon,
-  detailsPage
+  detailsPage,
+  addDragon
 }) => {
   return (
     <BrowserRouter>
@@ -30,6 +32,7 @@ const Router: React.FC<Props> = ({
           <PrivateRoute path="/" exact component={makeDragons} />
           <PrivateRoute path="/update/:id" exact component={updateDragon} />
           <PrivateRoute path="/details/:id" exact component={detailsPage} />
+          <PrivateRoute path="/new" exact component={addDragon} />
         </Switch>
       </Header>
     </BrowserRouter>
