@@ -53,10 +53,10 @@ const Header: React.FC<Props> = ({
 
   return (
     <AuthContext.Provider value={{ state, setState }}>
-      <Burger />
+      {state.user && <Burger />}
       <SideMenu leave={logoutHandler}/>
       <header className={Styles.headerWrapper}>
-        <div className={Styles.headerContent}>
+        <div data-status={!state.user && 'notAuth'} className={Styles.headerContent}>
           <Logo />
           {state.user && (
             <>

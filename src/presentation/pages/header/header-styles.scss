@@ -20,6 +20,10 @@
     flex-grow: 1;
     justify-content: flex-end;
 
+    &[data-status="notAuth"] {
+      justify-content: center;
+    }
+
     img {
       width: 4rem;
     }
@@ -38,9 +42,16 @@
       max-width: 80vw;
       justify-content: space-between;
 
-      & a:nth-child(1) {
+      a:nth-child(1) {
         flex-grow: 1;
       }
+
+      &[data-status="notAuth"] {
+        justify-content: center;
+        a:nth-child(1) {
+          flex-grow: 0;
+        }
+    }
 
       .link, 
       .greeting a {
