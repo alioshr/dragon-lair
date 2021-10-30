@@ -62,4 +62,14 @@ describe('UpdateDragon', () => {
       type: ''
     })
   })
+  test('Should show a name error if validation fails', () => {
+    const { sut, validatorSpy } = makeSut(undefined, VALIDATION_ERROR_MESSAGE)
+    Helper.populateField(sut, 'name', INPUT_DATA.name)
+    Helper.testStatusForField(
+      sut,
+      'name',
+      'default',
+      validatorSpy.errorMessage as string
+    )
+  })
 })
