@@ -3,10 +3,9 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 [![Known Vulnerabilities](https://snyk.io/test/github/alioshr/dragon-lair/badge.svg)](https://snyk.io/test/github/alioshr/dragon-lair)
 
-# Repository searcher
+# Dragon Lair
 
-This is really simple git repositories searcher
-  
+A simple and fun dragon crude playground
 > ##  Index
 
 * [Initialization instructions](#initialization-instruction)
