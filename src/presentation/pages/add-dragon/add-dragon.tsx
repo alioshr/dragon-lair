@@ -3,12 +3,14 @@ import DragonFormContext, { StateTypes, ErrorStateTypes } from '@/presentation/c
 import Styles from './add-dragon-styles.scss'
 import { DragonFormSkeleton, DragonForm } from '@/presentation/components'
 import { Validator } from '@/presentation/protocols'
+import { AddDragon } from '@/domain/usecases'
 
 type Props = {
   validator: Validator
+  createDragon: AddDragon
 }
 
-const AddDragon: React.FC<Props> = ({ validator }) => {
+const AddDragonPage: React.FC<Props> = ({ validator, createDragon }) => {
   const [state, setState] = useState<StateTypes>({
     name: '',
     type: '',
@@ -36,7 +38,9 @@ const AddDragon: React.FC<Props> = ({ validator }) => {
     }))
   }, [state.name, state.type])
 
-  const handleSubmit = async (): Promise<void> => await Promise.resolve(console.log())
+  const handleSubmit = async (): Promise<void> => {
+    await createDragon.add({ name: state.name, type: state.type })
+  }
 
   return (
     <DragonFormContext.Provider
@@ -62,4 +66,4 @@ const AddDragon: React.FC<Props> = ({ validator }) => {
   )
 }
 
-export default AddDragon
+export default AddDragonPage
