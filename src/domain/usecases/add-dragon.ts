@@ -6,5 +6,5 @@ export type AddDragonDTO = {
 }
 
 export interface AddDragon {
-  update: (data: AddDragonDTO) => Promise<Dragon>
+  add: (data: AddDragonDTO) => Promise<Dragon>
 }
