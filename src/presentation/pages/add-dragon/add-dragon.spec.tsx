@@ -1,5 +1,5 @@
 import { AddDragonSpy, ValidationSpy } from '@/presentation/test'
-import { RenderResult, render } from '@testing-library/react'
+import { RenderResult, render, waitFor } from '@testing-library/react'
 import React from 'react'
 import faker from 'faker'
 import { mockedDragons } from '@/domain/test'
@@ -12,6 +12,13 @@ const INPUT_DATA = {
   name: faker.random.words(),
   type: faker.internet.password()
 }
+
+const makeValidSubmit = (sut: RenderResult): void => {
+  Helper.populateField(sut, 'type', INPUT_DATA.type)
+  Helper.populateField(sut, 'name', INPUT_DATA.name)
+  Helper.clickElement(sut, 'submit-button')
+}
+
 const makeValidationSpyAssertion = (
   validationSpy: ValidationSpy,
   sut: RenderResult,
@@ -38,7 +45,7 @@ const makeSut = (
   const validatorSpy = new ValidationSpy()
   validatorSpy.errorMessage = validationError ?? null
   const sut = render(
-    <AddDragon validator={validatorSpy}/>
+    <AddDragon createDragon={addDragonSpy} validator={validatorSpy}/>
   )
   return { sut, addDragonSpy, validatorSpy }
 }
@@ -104,5 +111,12 @@ describe('UpdateDragon', () => {
     Helper.populateField(sut, 'type', INPUT_DATA.type)
     Helper.populateField(sut, 'name', INPUT_DATA.name)
     Helper.testButtonDisabled('submit-button', false)
+  })
+  test('Should call AddDragon with the correct params', async () => {
+    const { sut, addDragonSpy } = makeSut()
+    makeValidSubmit(sut)
+    const form = sut.getByTestId('form')
+    await waitFor(() => form)
+    expect(addDragonSpy.body).toEqual(INPUT_DATA)
   })
 })
