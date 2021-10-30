@@ -12,7 +12,6 @@ const List: React.FC = () => {
   return (
     <ul data-testid="dragons-list">
       {state.dragons
-        .sort((a, b) => a.name.localeCompare(b.name))
         .map((dragon, i) => (
           <DragonCard key={i} dragon={dragon} />
         ))}
