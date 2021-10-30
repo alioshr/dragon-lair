@@ -4,6 +4,7 @@ import Styles from './add-dragon-styles.scss'
 import { DragonFormSkeleton, DragonForm } from '@/presentation/components'
 import { Validator } from '@/presentation/protocols'
 import { AddDragon } from '@/domain/usecases'
+import { useHistory } from 'react-router-dom'
 
 type Props = {
   validator: Validator
@@ -11,6 +12,7 @@ type Props = {
 }
 
 const AddDragonPage: React.FC<Props> = ({ validator, createDragon }) => {
+  const history = useHistory()
   const [state, setState] = useState<StateTypes>({
     name: '',
     type: '',
@@ -49,6 +51,7 @@ const AddDragonPage: React.FC<Props> = ({ validator, createDragon }) => {
     }
     try {
       await createDragon.add({ name: state.name, type: state.type })
+      history.replace('/')
     } catch (error) {
       setErrorState((prevState) => ({
         ...prevState,
