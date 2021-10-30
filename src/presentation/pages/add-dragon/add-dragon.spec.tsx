@@ -99,4 +99,10 @@ describe('UpdateDragon', () => {
     Helper.populateField(sut, 'type', INPUT_DATA.name)
     Helper.testStatusForField(sut, 'type', 'valid')
   })
+  test('Should enable the submit button if the form is valid', () => {
+    const { sut } = makeSut()
+    Helper.populateField(sut, 'type', INPUT_DATA.type)
+    Helper.populateField(sut, 'name', INPUT_DATA.name)
+    Helper.testButtonDisabled('submit-button', false)
+  })
 })
