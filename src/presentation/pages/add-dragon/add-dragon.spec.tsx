@@ -126,4 +126,15 @@ describe('UpdateDragon', () => {
     await waitFor(() => form)
     expect(addDragonSpy.callCount).toBe(0)
   })
+  test('Should present an error if AddDragon fails', async () => {
+    const { sut, addDragonSpy } = makeSut()
+    const error = new Error('Oh, boy. Something went wrong')
+    jest
+      .spyOn(addDragonSpy, 'add')
+      .mockReturnValueOnce(Promise.reject(error))
+    makeValidSubmit(sut)
+    await Helper.testChildCount(sut, 'status-wrapper', 1)
+    const mainErrorLabel = sut.getByTestId('main-error')
+    expect(mainErrorLabel.textContent).toBe(error.message)
+  })
 })
