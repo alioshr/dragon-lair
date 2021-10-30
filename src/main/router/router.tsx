@@ -1,8 +1,10 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import '@/presentation/styles/_global.scss'
-import { Header } from '../../presentation/components'
 import PrivateRoute from '../proxies/private-route'
+import { makeLocalGetAccessToken } from '../factories/usecases/get-access-token/local-get-access-token-factory'
+import { makeLocalDeleteAccessToken } from '../factories/usecases/remove-access-token/local-remove-access-token-factory'
+import { Header } from '@/presentation/pages'
 
 type Props = {
   makeLogin: React.FC
@@ -19,7 +21,10 @@ const Router: React.FC<Props> = ({
 }) => {
   return (
     <BrowserRouter>
-      <Header>
+      <Header
+        getAccessToken={makeLocalGetAccessToken()}
+        deleteAccessToken={makeLocalDeleteAccessToken()}
+      >
         <Switch>
           <Route path="/login" exact component={makeLogin} />
           <PrivateRoute path="/" exact component={makeDragons} />
