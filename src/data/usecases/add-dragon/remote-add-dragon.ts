@@ -15,7 +15,7 @@ export class RemoteAddDragon implements AddDragon {
       body: data
     })
     switch (httpResponse.statusCode) {
-      case HttpStatusCode.ok: return httpResponse.body
+      case HttpStatusCode.created: return httpResponse.body
       default: throw new UnexpectedError()
     }
   }

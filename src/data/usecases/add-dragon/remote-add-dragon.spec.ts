@@ -22,6 +22,7 @@ const makeSut = (): SutTypes => {
 describe('RemoteAddDragon', () => {
   test('should call HttpClient with the correct params', async () => {
     const { sut, httpClientSpy } = makeSut()
+    httpClientSpy.response = { statusCode: HttpStatusCode.created }
     await sut.add(ADD_PARAMS)
     expect(httpClientSpy.url).toBe(URL)
     expect(httpClientSpy.method).toBe('POST')
@@ -45,11 +46,11 @@ describe('RemoteAddDragon', () => {
     const promise = sut.add(ADD_PARAMS)
     await expect(promise).rejects.toThrow(new UnexpectedError())
   })
-  test('should return a dragon on success (200)', async () => {
+  test('should return a dragon on success (201)', async () => {
     const { sut, httpClientSpy } = makeSut()
     const responseBody = mockedDragons()[0]
     httpClientSpy.response = {
-      statusCode: HttpStatusCode.ok,
+      statusCode: HttpStatusCode.created,
       body: responseBody
     }
     const httpResponse = await sut.add(ADD_PARAMS)
