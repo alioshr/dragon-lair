@@ -1,9 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DragonFormContext, { StateTypes, ErrorStateTypes } from '@/presentation/contexts/dragon-form-context'
 import Styles from './add-dragon-styles.scss'
 import { DragonFormSkeleton, DragonForm } from '@/presentation/components'
+import { Validator } from '@/presentation/protocols'
 
-const AddDragon: React.FC = () => {
+type Props = {
+  validator: Validator
+}
+
+const AddDragon: React.FC<Props> = ({ validator }) => {
   const [state, setState] = useState<StateTypes>({
     name: '',
     type: '',
@@ -15,6 +20,21 @@ const AddDragon: React.FC = () => {
     type: '',
     main: ''
   })
+
+  useEffect(() => {
+    const formState = {
+      name: state.name,
+      type: state.type
+    }
+
+    const nameError = validator.validate('name', formState)
+    const typeError = validator.validate('type', formState)
+    setErrorState((prevState) => ({
+      ...prevState,
+      name: nameError,
+      type: typeError
+    }))
+  }, [state.name, state.type])
 
   const handleSubmit = async (): Promise<void> => await Promise.resolve(console.log())
 
