@@ -5,6 +5,8 @@ import faker from 'faker'
 import { mockedDragons } from '@/domain/test'
 import { AddDragon } from '..'
 import * as Helper from '@/presentation/test/form-helper'
+import { createMemoryHistory } from 'history'
+import { Router } from 'react-router-dom'
 
 const DRAGON = mockedDragons()[0]
 const VALIDATION_ERROR_MESSAGE = faker.random.words(2)
@@ -39,13 +41,17 @@ type SutTypes = {
   addDragonSpy: AddDragonSpy
   validatorSpy: ValidationSpy
 }
+
+const history = createMemoryHistory({ initialEntries: ['/new'] })
 const makeSut = (
   addDragonSpy = new AddDragonSpy(DRAGON),
   validationError?: string): SutTypes => {
   const validatorSpy = new ValidationSpy()
   validatorSpy.errorMessage = validationError ?? null
   const sut = render(
+    <Router history={history}>
     <AddDragon createDragon={addDragonSpy} validator={validatorSpy}/>
+    </Router>
   )
   return { sut, addDragonSpy, validatorSpy }
 }
@@ -136,5 +142,13 @@ describe('UpdateDragon', () => {
     await Helper.testChildCount(sut, 'status-wrapper', 1)
     const mainErrorLabel = sut.getByTestId('main-error')
     expect(mainErrorLabel.textContent).toBe(error.message)
+  })
+  test('Should go to homepage on auth success', async () => {
+    const { sut } = makeSut()
+    makeValidSubmit(sut)
+    const form = sut.getByTestId('form')
+    await waitFor(() => form)
+    expect(history.length).toBe(1)
+    expect(history.location.pathname).toBe('/')
   })
 })
