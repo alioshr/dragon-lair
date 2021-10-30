@@ -26,9 +26,9 @@ const AddDragon: React.FC<Props> = ({ validator }) => {
       name: state.name,
       type: state.type
     }
-
     const nameError = validator.validate('name', formState)
     const typeError = validator.validate('type', formState)
+    console.log(nameError, typeError)
     setErrorState((prevState) => ({
       ...prevState,
       name: nameError,
