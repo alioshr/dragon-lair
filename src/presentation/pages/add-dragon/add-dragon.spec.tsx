@@ -94,4 +94,9 @@ describe('UpdateDragon', () => {
     Helper.populateField(sut, 'name', INPUT_DATA.name)
     Helper.testStatusForField(sut, 'name', 'valid')
   })
+  test('Should show a valid type if validation succeeds', () => {
+    const { sut } = makeSut()
+    Helper.populateField(sut, 'type', INPUT_DATA.name)
+    Helper.testStatusForField(sut, 'type', 'valid')
+  })
 })
