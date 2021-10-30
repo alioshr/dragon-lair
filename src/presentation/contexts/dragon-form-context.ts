@@ -12,9 +12,9 @@ export type ErrorStateTypes = {
   main: string | null
 }
 
-export type UpdateDragonStateTypes = {
+export type DragonFormStateTypes = {
   state: [StateTypes, Dispatch<SetStateAction<StateTypes>>]
   errorState: [ErrorStateTypes, Dispatch<SetStateAction<ErrorStateTypes>>]
 }
 
-export default createContext<UpdateDragonStateTypes>(null as any)
+export default createContext<DragonFormStateTypes>(null as any)
