@@ -1,0 +1,79 @@
+@import '../../styles/colors';
+@import '../../styles/config';
+
+.headerWrapper {
+  display: flex;
+  justify-content: center;
+  background-color: $primary;
+  padding: 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12vh;
+  z-index: $zIndex-header;
+  box-shadow: 0px 1px 3px -1px $black;
+
+  .headerContent {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    justify-content: flex-end;
+
+    img {
+      width: 4rem;
+    }
+
+    .link {
+      display: none;
+    }
+
+    .greeting {
+      display: none;
+    }
+  }
+
+  @media only screen and (min-width: 600px) {
+    .headerContent {
+      max-width: 80vw;
+      justify-content: space-between;
+
+      & a:nth-child(1) {
+        flex-grow: 1;
+      }
+
+      .link, 
+      .greeting a {
+        color: $white;
+        margin-left: 1rem;
+        &:hover {
+          text-decoration: underline;
+          color: $link;
+        }
+      }
+
+      .link,
+      .greeting {
+        width: 10rem;
+        display: flex;
+        justify-content: flex-end;
+        color: $white;
+      }
+
+      .greeting {
+        span {
+          margin-right: 1rem;
+        }
+
+        span:nth-child(2) {
+          cursor: pointer;
+
+          &:hover {
+            color: $link;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}
