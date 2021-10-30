@@ -39,6 +39,10 @@ const AddDragonPage: React.FC<Props> = ({ validator, createDragon }) => {
   }, [state.name, state.type])
 
   const handleSubmit = async (): Promise<void> => {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    if (errorState.main || errorState.name || errorState.type) {
+      return
+    }
     await createDragon.add({ name: state.name, type: state.type })
   }
 
