@@ -1,5 +1,6 @@
 export * from './save-access-token'
 export * from './get-access-token'
+export * from './delete-access-token'
 export * from './exclude-dragon'
 export * from './get-dragons'
 export * from './get-dragon'
