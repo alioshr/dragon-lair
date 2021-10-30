@@ -1,5 +1,5 @@
 import { SaveAccessToken } from '@/domain/usecases'
 
-export class AccessTokenStub implements SaveAccessToken {
+export class SaveAccessTokenStub implements SaveAccessToken {
   async save (accessToken: string): Promise<void> {}
 }

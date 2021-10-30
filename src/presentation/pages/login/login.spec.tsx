@@ -2,11 +2,12 @@ import React from 'react'
 import Login from './login'
 import { render, RenderResult, waitFor } from '@testing-library/react'
 import * as Helper from '@/presentation/test/form-helper'
-import { ValidationSpy, AccessTokenStub } from '@/presentation/test'
+import { ValidationSpy, SaveAccessTokenStub } from '@/presentation/test'
 import faker from 'faker'
 import { SaveAccessToken } from '@/domain/usecases'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
+import authContext from '@/presentation/contexts/auth-context'
 
 const VALIDATION_ERROR_MESSAGE = faker.random.words(2)
 const CREDENTIALS = {
@@ -44,12 +45,14 @@ type SutTypes = {
 const history = createMemoryHistory({ initialEntries: ['/login'] })
 const makeSut = (validationError?: string): SutTypes => {
   const validatorSpy = new ValidationSpy()
-  const saveAccessTokenStub = new AccessTokenStub()
+  const saveAccessTokenStub = new SaveAccessTokenStub()
   validatorSpy.errorMessage = validationError ?? null
   const sut = render(
-    <Router history={history}>
+    <authContext.Provider value={{ state: { isAuth: false } as any, setState: () => {} }}>
+      <Router history={history}>
       <Login validator={validatorSpy} saveAccessToken={saveAccessTokenStub} />
     </Router>
+    </authContext.Provider>
   )
   return { sut, validatorSpy, saveAccessTokenStub }
 }

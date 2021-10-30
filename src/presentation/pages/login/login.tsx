@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Styles from './login-styles.scss'
 import { FormStatus, Input } from '@/presentation/components'
 import { Validator } from '@/presentation/protocols'
@@ -7,7 +7,8 @@ import LoginContext, {
   ErrorStateTypes
 } from '@/presentation/contexts/login-context'
 import { SaveAccessToken } from '@/domain/usecases'
-import { useHistory } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
+import authContext from '@/presentation/contexts/auth-context'
 
 type Props = {
   validator: Validator
@@ -15,6 +16,7 @@ type Props = {
 }
 
 const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
+  const context = useContext(authContext)
   const history = useHistory()
   const [state, setState] = useState<StateTypes>({
     name: '',
@@ -44,6 +46,7 @@ const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
     event.preventDefault()
     try {
       await saveAccessToken.save(state.name)
+      context.setState((old) => ({ ...old, isAuth: true, user: state.name }))
       history.replace('/')
     } catch (error) {
       setErrorState((prevState) => ({
@@ -60,6 +63,7 @@ const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
         errorState: [errorState, setErrorState]
       }}
     >
+      {context.state.isAuth && <Redirect to="/" />}
       <div className={Styles.wrapper}>
         <form
           data-testid="login-form"
