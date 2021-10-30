@@ -2,7 +2,7 @@ import { HttpStatusCode } from '@/data/protocols'
 import { mockedUrl, HttpClientSpy } from '@/data/tests'
 import { UnexpectedError } from '@/domain/errors'
 import { mockedDragons, mockedUpdateDragonDTO } from '@/domain/test'
-import { UpdateDragon } from '@/domain/usecases/update-dragon'
+import { UpdateDragon } from '@/domain/usecases'
 import { RemoteUpdateDragon } from './remote-update-dragon'
 
 const URL = mockedUrl()

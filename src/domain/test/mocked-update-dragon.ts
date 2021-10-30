@@ -1,5 +1,5 @@
 import faker from 'faker'
-import { UpdateDragonDTO } from '../usecases/update-dragon'
+import { UpdateDragonDTO } from '../usecases'
 
 export const mockedUpdateDragonDTO = (): UpdateDragonDTO => ({
   id: faker.datatype.uuid(),
