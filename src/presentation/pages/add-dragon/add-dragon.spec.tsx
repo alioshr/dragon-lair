@@ -8,6 +8,24 @@ import * as Helper from '@/presentation/test/form-helper'
 
 const DRAGON = mockedDragons()[0]
 const VALIDATION_ERROR_MESSAGE = faker.random.words(2)
+const INPUT_DATA = {
+  name: faker.random.words(),
+  type: faker.internet.password()
+}
+const makeValidationSpyAssertion = (
+  validationSpy: ValidationSpy,
+  sut: RenderResult,
+  fieldName: string,
+  credentials: any
+): void => {
+  const validatorSpy = jest.spyOn(validationSpy, 'validate')
+  fieldName === 'name'
+    ? Helper.populateField(sut, 'name', INPUT_DATA.name)
+    : Helper.populateField(sut, 'type', INPUT_DATA.type)
+
+  expect(validatorSpy).toHaveBeenCalledWith(fieldName, credentials)
+  expect(validationSpy.inputData).toEqual(credentials)
+}
 
 type SutTypes = {
   sut: RenderResult
@@ -36,5 +54,12 @@ describe('UpdateDragon', () => {
       'default',
       VALIDATION_ERROR_MESSAGE
     )
+  })
+  test('Should call validation with the correct name', async () => {
+    const { sut, validatorSpy } = makeSut(undefined, VALIDATION_ERROR_MESSAGE)
+    makeValidationSpyAssertion(validatorSpy, sut, 'name', {
+      name: INPUT_DATA.name,
+      type: ''
+    })
   })
 })
