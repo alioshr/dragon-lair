@@ -84,7 +84,7 @@ const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
     <DragonsContext.Provider value={{ state, setState }}>
       <div className={Styles.dragonListWrapper}>
         <div className={Styles.contentWrapper}>
-          <h2>Dragons</h2>
+          <h2>Dragões</h2>
           {state.error
             ? (
             <Error error={state.error} reload={reload} />
