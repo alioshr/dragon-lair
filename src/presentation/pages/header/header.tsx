@@ -24,17 +24,14 @@ const Header: React.FC<Props> = ({
   })
   const history = useHistory()
 
-  useEffect(() => {
-    if (!state.isAuth) {
-      deleteAccessToken.delete().then(() => {
-        setState((prevState) => ({
-          ...prevState,
-          isAuth: false,
-          user: null
-        }))
-      }).catch(err => err)
-    }
-  }, [state.isAuth])
+  const logoutHandler = async (): Promise<void> => {
+    await deleteAccessToken.delete()
+    setState((prevState) => ({
+      ...prevState,
+      isAuth: false,
+      user: null
+    }))
+  }
 
   useEffect(() => {
     try {
@@ -57,7 +54,7 @@ const Header: React.FC<Props> = ({
   return (
     <AuthContext.Provider value={{ state, setState }}>
       <Burger />
-      <SideMenu />
+      <SideMenu leave={logoutHandler}/>
       <header className={Styles.headerWrapper}>
         <div className={Styles.headerContent}>
           <Logo />
@@ -66,7 +63,7 @@ const Header: React.FC<Props> = ({
               <Link className={Styles.link} to="/new">Criar Dragão</Link>
               <div className={Styles.greeting}>
                 <span>Olá, {state.user}</span>
-                <span onClick={() => setState((old) => ({ ...old, isAuth: false }))}>
+                <span onClick={logoutHandler}>
                   Sair
                 </span>
               </div>

@@ -5,7 +5,11 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import Styles from './side-menu-styles.scss'
 
-const SideBar: React.FC = () => {
+type Props = {
+  leave: () => void
+}
+
+const SideBar: React.FC<Props> = ({ leave }) => {
   const { state, setState } = useContext(authContext)
   const close = (): void => setState((old) => ({ ...old, open: !state.open }))
 
@@ -21,14 +25,7 @@ const SideBar: React.FC = () => {
         Criar Dragão
       </Link>
       <span
-        onClick={() =>
-          setState((old) => ({
-            ...old,
-            open: !state.open,
-            isAuth: false
-          }))
-        }
-      >
+        onClick={() => { leave(); close() }}>
         Sair
       </span>
     </nav>
