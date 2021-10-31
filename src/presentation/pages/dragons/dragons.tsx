@@ -26,7 +26,8 @@ const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
     ...prevState,
     dragons: [],
     error: null,
-    reload: !state.reload
+    reload: !state.reload,
+    id: null
   }))
 
   useEffect(() => {
@@ -55,12 +56,7 @@ const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
       setState((prevState) => ({ ...prevState, isLoading: true }))
       excludeDragon.delete(state.id)
         .then(() => {
-          setState((prevState) => ({
-            ...prevState,
-            isLoading: false,
-            dragons: state.dragons.filter(dragon => dragon.id !== state.id),
-            id: null
-          }))
+          reload()
         })
         .catch((error) => {
           setState((prevState) => ({
