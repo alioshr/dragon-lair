@@ -31,9 +31,18 @@ ul {
         linear-gradient(to right, $disabledBackground, $disabledBackground),
         linear-gradient(to right, $disabledBackground, $disabledBackground),
         linear-gradient(to right, $disabledBackground, $disabledBackground);
-      background-position: 24px 55px, left 0 bottom 0, 108px 77px,
-        108px 97px, 108px 117px;
-      background-size: 60px 100px, 100% 40px, 59% 16px, 50% 16px, 67% 16px;
+      background-position: 
+        24px 55px, 
+        left 0 bottom 0, 
+        108px 77px, 
+        108px 97px,
+        108px 117px;
+      background-size: 
+        60px 100px, 
+        100% 40px, 
+        59% 16px, 
+        50% 16px, 
+        57% 16px;
 
       &::after {
         content: '';
