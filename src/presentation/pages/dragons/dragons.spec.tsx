@@ -103,15 +103,15 @@ describe('Dragons', () => {
     const excludeButtons = dragonList.querySelectorAll('div.exclude')
     expect(excludeButtons.length).toBe(2)
   })
-  test('Should remove dragon from list if exclusion succeeds', async () => {
-    makeSut()
+  test('Should should reload dragons if exclusion succeeds', async () => {
+    const { getDragonsSpy } = makeSut()
     const dragonList = screen.getByTestId('dragons-list')
     await waitFor(() => dragonList)
     const excludeButton = screen.getByTestId(`exclude-${DRAGONS[0].id}`)
+    expect(getDragonsSpy.callCount).toBe(1)
     fireEvent.click(excludeButton)
     await waitFor(() => dragonList)
-    const dragons = dragonList.querySelectorAll('div.dragonContent')
-    expect(dragons.length).toBe(2)
+    expect(getDragonsSpy.callCount).toBe(2)
   })
   test('Should present error if exclusion fails', async () => {
     const excludeDragonSpy = new ExcludeDragonSpy()
