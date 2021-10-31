@@ -17,7 +17,7 @@ const DetailsDragonPage: React.FC<Props> = ({ getDragon }) => {
     type: '',
     createdAt: null as any,
     isLoading: false,
-    mainError: ''
+    mainError: null
   })
 
   useEffect(() => {
@@ -33,11 +33,11 @@ const DetailsDragonPage: React.FC<Props> = ({ getDragon }) => {
           createdAt: dragon.createdAt
         }))
       })
-      .catch((err) => {
+      .catch((error) => {
         setState((prevState) => ({
           ...prevState,
           isLoading: false,
-          mainError: (err as Error).message
+          mainError: error
         }))
       })
   }, [])

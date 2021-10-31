@@ -6,7 +6,6 @@ import DragonsContext, {
   StateTypes
 } from '@/presentation/contexts/dragon-context'
 import { Error } from '@/presentation/components'
-import { Dragon } from '@/domain/models'
 
 type Props = {
   getDragons: GetDragons
@@ -26,7 +25,7 @@ const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
   const reload = (): void => setState((prevState) => ({
     ...prevState,
     dragons: [],
-    error: '',
+    error: null,
     reload: !state.reload
   }))
 
@@ -45,20 +44,16 @@ const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
         setState((prevState) => ({
           ...prevState,
           isLoading: false,
-          error: error.message
+          error: error
         }))
       })
   }, [state.reload])
-
-  const handleExclusion = async (id: string): Promise<Dragon> => {
-    return await excludeDragon.delete(id)
-  }
 
   useEffect(() => {
     if (skipCount) setSkipCount(false)
     if (!skipCount && state.id) {
       setState((prevState) => ({ ...prevState, isLoading: true }))
-      handleExclusion(state.id)
+      excludeDragon.delete(state.id)
         .then(() => {
           setState((prevState) => ({
             ...prevState,
@@ -71,7 +66,7 @@ const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
           setState((prevState) => ({
             ...prevState,
             isLoading: false,
-            error: error.message
+            error: error
           }))
         })
     }

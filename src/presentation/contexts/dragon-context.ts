@@ -4,7 +4,7 @@ import { createContext, Dispatch, SetStateAction } from 'react'
 export type StateTypes = {
   dragons: Dragon[]
   isLoading: boolean
-  error: null | string
+  error: Error | null
   reload: boolean
   id: string | null
 }

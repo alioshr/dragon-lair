@@ -11,6 +11,7 @@ import { mockedDragons } from '@/domain/test'
 import { ExcludeDragonSpy, GetDragonsSpy } from '@/presentation/test'
 import { Router } from 'react-router'
 import { createMemoryHistory } from 'history'
+import { NoContentError, UnexpectedError } from '@/domain/errors'
 
 const DRAGONS = mockedDragons()
 
@@ -61,17 +62,27 @@ describe('Dragons', () => {
     await waitFor(() => dragonList)
     expect(screen.getByTestId('error')).toBeTruthy()
   })
-  test('Should call GetDragons on reload', async () => {
+  test('Should call GetDragons on reload if throws UnexpectedError', async () => {
     const getDragonsSpy = new GetDragonsSpy(DRAGONS)
     jest
       .spyOn(getDragonsSpy, 'get')
-      .mockRejectedValueOnce(new Error('horrible error'))
+      .mockRejectedValueOnce(new UnexpectedError())
     makeSut(getDragonsSpy)
     const dragonList = screen.getByTestId('dragons-list')
     await waitFor(() => dragonList)
     fireEvent.click(screen.getByTestId('reload'))
     expect(getDragonsSpy.callCount).toBe(1)
     await waitFor(() => screen.getByRole('heading'))
+  })
+  test('Should present create dragon option if GetDragons throws NoContentError', async () => {
+    const getDragonsSpy = new GetDragonsSpy(DRAGONS)
+    jest
+      .spyOn(getDragonsSpy, 'get')
+      .mockRejectedValueOnce(new NoContentError())
+    makeSut(getDragonsSpy)
+    const dragonList = screen.getByTestId('dragons-list')
+    await waitFor(() => dragonList)
+    expect(screen.getByTestId('create-dragon-error')).toBeTruthy()
   })
   test('Should call ExcludeDragon with the correct dragon id', async () => {
     const { excludeDragonSpy } = makeSut()
