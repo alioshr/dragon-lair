@@ -1,4 +1,4 @@
-import { DragonListSortingDecorator } from '@/main/decorators/dragon-list-sorting-decorator'
+import { DragonListDecorator } from '@/main/decorators/dragon-list-decorator'
 import { Dragons } from '@/presentation/pages'
 import React from 'react'
 import { makeRemoteExcludeDragon } from '../../usecases/exclude-dragon/remote-exclude-dragon-factory'
@@ -7,6 +7,6 @@ import { makeRemoteGetDragons } from '../../usecases/get-dragons/remote-get-drag
 export const makeDragons: React.FC = () => (
   <Dragons
   excludeDragon={makeRemoteExcludeDragon()}
-  getDragons={new DragonListSortingDecorator(makeRemoteGetDragons())}
+  getDragons={new DragonListDecorator(makeRemoteGetDragons())}
   />
 )
