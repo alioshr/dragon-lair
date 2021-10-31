@@ -51,16 +51,13 @@ const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
   }, [state.reload])
 
   const handleExclusion = async (id: string): Promise<Dragon> => {
-    setState((prevState) => ({
-      ...prevState,
-      isLoading: true
-    }))
     return await excludeDragon.delete(id)
   }
 
   useEffect(() => {
     if (skipCount) setSkipCount(false)
     if (!skipCount && state.id) {
+      setState((prevState) => ({ ...prevState, isLoading: true }))
       handleExclusion(state.id)
         .then(() => {
           setState((prevState) => ({
