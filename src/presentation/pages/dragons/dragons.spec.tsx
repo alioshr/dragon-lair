@@ -87,9 +87,9 @@ describe('Dragons', () => {
     await waitFor(() => dragonList)
     const excludeButton = screen.getByTestId(`exclude-${DRAGONS[0].id}`)
     fireEvent.click(excludeButton)
-    const spinners = dragonList.querySelectorAll('svg.spinner')
+    const spinners = dragonList.querySelectorAll('div.spinner')
     expect(spinners.length).toBe(1)
-    const excludeButtons = dragonList.querySelectorAll('svg.exclude')
+    const excludeButtons = dragonList.querySelectorAll('div.exclude')
     expect(excludeButtons.length).toBe(2)
   })
   test('Should remove dragon from list if exclusion succeeds', async () => {
