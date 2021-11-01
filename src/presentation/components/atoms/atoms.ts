@@ -1,7 +1,12 @@
 
 import { atom } from 'recoil'
 
-export const currentAccountState = atom({
+type AccountTypes = {
+  getCurrentAccount: () => string
+  setCurrentAccount: (accessToken: string) => Promise<void>
+}
+
+export const currentAccountState = atom<AccountTypes>({
   key: 'currentAccountState',
   default: {
     getCurrentAccount: null as unknown as () => string,
@@ -9,9 +14,15 @@ export const currentAccountState = atom({
   }
 })
 
-export const sidebarState = atom<{open: boolean}>({
-  key: 'sidebarState',
+type HeaderTypes = {
+  isSidebarOpen: boolean
+  user: string | null
+}
+
+export const headerState = atom<HeaderTypes>({
+  key: 'headerState',
   default: {
-    open: false
+    isSidebarOpen: false,
+    user: null
   }
 })
