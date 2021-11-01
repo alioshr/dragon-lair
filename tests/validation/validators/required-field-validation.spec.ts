@@ -12,7 +12,7 @@ describe('RequiredFieldValidation', () => {
   test('Should return an error if field is empty', () => {
     const sut = makeSut(FIELD)
     const result = sut.validate({ email: '' })
-    expect(result).toEqual(new RequiredFieldError(FIELD))
+    expect(result).toEqual(new RequiredFieldError())
   })
   test('Should return null if field is filled', () => {
     const sut = makeSut(FIELD)
