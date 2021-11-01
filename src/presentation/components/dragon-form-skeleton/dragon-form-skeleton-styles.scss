@@ -1,11 +1,11 @@
-@import "../../styles/colors";
+@import '../../styles/colors';
 
 .wrapper {
   display: flex;
   justify-content: center;
   margin-top: 1rem;
-  flex-grow: 1;
   width: 100%;
+  flex-grow: 0;
 
   .skeleton {
     background-color: $white;
@@ -15,21 +15,16 @@
     position: relative;
     overflow: hidden;
     background-repeat: no-repeat;
-    background-image: 
-      linear-gradient(to right, $disabledBackground, $disabledBackground),
+    background-image: linear-gradient(
+        to right,
+        $disabledBackground,
+        $disabledBackground
+      ),
       linear-gradient(to right, $disabledBackground, $disabledBackground),
       linear-gradient(to right, $disabledBackground, $disabledBackground),
       linear-gradient(to right, $disabledBackground, $disabledBackground);
-    background-position: 
-      left 0 bottom 0,  
-      50% 10%,  
-      50% 45%, 
-      50% 70%;
-    background-size: 
-      100% 40px,  
-      90% 40px,  
-      90% 25px,  
-      90% 60px;
+    background-position: left 0 bottom 0, 50% 10%, 50% 45%, 50% 70%;
+    background-size: 100% 40px, 90% 40px, 90% 25px, 90% 60px;
 
     &::after {
       position: absolute;
@@ -53,5 +48,11 @@
 @keyframes shimmer {
   100% {
     transform: translateX(100%);
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .wrapper {
+    flex-grow: 1;
   }
 }
