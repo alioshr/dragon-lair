@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import Styles from './update-dragon-styles.scss'
-import DragonFormContext, {
-  ErrorStateTypes,
-  StateTypes
-} from '@/presentation/contexts/dragon-form-context'
 import { GetDragon } from '@/domain/usecases'
 import { useHistory, useParams } from 'react-router-dom'
-import { DragonFormSkeleton, DragonForm } from '@/presentation/components'
+import { DragonFormSkeleton } from '@/presentation/components'
 import { Validator } from '@/presentation/protocols'
 import { UpdateDragon } from '@/domain/usecases/update-dragon'
+import { Input, TextArea, SubmitButton, FormStatus, updateDragonState } from './components/'
+import { useErrorHandler } from '@/presentation/hooks'
+import { useRecoilState } from 'recoil'
 
 type Props = {
   getDragon: GetDragon
@@ -23,46 +22,30 @@ const UpdateDragonPage: React.FC<Props> = ({
 }) => {
   const { id } = useParams<{ id: string }>()
   const history = useHistory()
-  const [skipCount, setSkipCount] = useState(true)
-
-  const [defaultData, setDefault] = useState({
-    type: '',
-    name: ''
+  const [defaultData, setDefault] = useState({ type: '', name: '' })
+  const [state, setState] = useRecoilState(updateDragonState)
+  const handleError = useErrorHandler((error: Error) => {
+    setState((old) => ({ ...old, mainError: error.message, isLoading: false }))
   })
 
-  const [state, setState] = useState<StateTypes>({
-    name: '',
-    type: '',
-    isLoading: false
-  })
+  useEffect(() => validate('name'), [state.name])
+  useEffect(() => validate('type'), [state.type])
 
-  const [errorState, setErrorState] = useState<ErrorStateTypes>({
-    name: '',
-    type: '',
-    main: ''
-  })
-
-  useEffect(() => {
-    if (skipCount) setSkipCount(false)
-    if (!skipCount) {
-      const nameState = {
-        name: state.name,
-        defaultName: defaultData.name
-      }
-      const typeState = {
-        type: state.type,
-        defaultType: defaultData.type
-      }
-      const nameError = validator.validate('name', nameState)
-      const typeError = validator.validate('type', typeState)
-      const invalidForm = nameError && typeError
-      setErrorState((prevState) => ({
-        ...prevState,
-        name: invalidForm && nameError,
-        type: invalidForm && typeError
-      }))
+  const validate = (field: string): void => {
+    const fieldData = field as 'name' | 'type'
+    const formData = {
+      [field]: state[fieldData],
+      [`${fieldData}Default`]: defaultData[fieldData]
     }
-  }, [state.name, state.type])
+    setState((old) => ({
+      ...old,
+      [`${field}Error`]: validator.validate(field, formData)
+    }))
+    setState((old) => ({
+      ...old,
+      isFormInvalid: !!old.nameError && !!old.typeError
+    }))
+  }
 
   useEffect(() => {
     setState((prevState) => ({ ...prevState, isLoading: true }))
@@ -81,56 +64,51 @@ const UpdateDragonPage: React.FC<Props> = ({
           type: dragon.type
         }))
       })
-      .catch((err) => console.log(err))
+      .catch(handleError)
   }, [])
 
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault()
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    if (state.isLoading || state.isFormInvalid) {
+      return
+    }
+
     try {
+      const { type, name } = state
       setState((prevState) => ({
         ...prevState,
         isLoading: true
       }))
-      await updateDragon.update({
-        id,
-        body: {
-          type: state.type,
-          name: state.name
-        }
-      })
+      await updateDragon.update({ id, body: { type, name } })
       history.replace('/')
     } catch (error) {
-      setState((prevState) => ({
-        ...prevState,
-        isLoading: false,
-        main: (error as Error).message
-      }))
+      handleError(error as Error)
     }
   }
 
   return (
-    <DragonFormContext.Provider
-      value={{
-        state: [state, setState],
-        errorState: [errorState, setErrorState]
-      }}
-    >
-      <div className={Styles.wrapper} data-testid="wrapper">
-        {state.isLoading && !state.name
-          ? (
-          <DragonFormSkeleton />
-            )
-          : (
-          <DragonForm
-            title="Atualizar"
-            context={DragonFormContext}
-            handle={handleSubmit}
-          />
-            )}
-      </div>
-    </DragonFormContext.Provider>
+    <div className={Styles.wrapper} data-testid="wrapper">
+      {state.isLoading && !state.name
+        ? (
+        <DragonFormSkeleton />
+          )
+        : (
+        <form
+          data-testid="form"
+          className={Styles.form}
+          onSubmit={handleSubmit}
+        >
+          <h2>Atualizar Dragão</h2>
+          <Input value={state.name} type="text" name="name" placeholder="Nome do dragão" />
+          <TextArea value={state.type} name="type" placeholder="Tipo do dragão" />
+          <SubmitButton text="Atualizar" />
+          <FormStatus />
+        </form>
+          )}
+    </div>
   )
 }
 
