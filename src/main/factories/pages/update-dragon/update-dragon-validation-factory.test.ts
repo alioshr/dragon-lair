@@ -8,8 +8,8 @@ describe('LoginValidationFactory', () => {
   test('ensure Validator Composite is called with the correct validations', () => {
     makeUpdateDragonValidations()
     expect(ValidatorComposite.build).toHaveBeenCalledWith([
-      ...ValidationBuilder.fieldName('name').required().notEqual('defaultName').build(),
-      ...ValidationBuilder.fieldName('type').required().notEqual('defaultType').min(5).build()
+      ...ValidationBuilder.fieldName('name').required().notEqual('nameDefault').build(),
+      ...ValidationBuilder.fieldName('type').required().notEqual('typeDefault').min(5).build()
     ])
   })
 })
