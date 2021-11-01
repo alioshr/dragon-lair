@@ -1,8 +1,8 @@
-// Menu.js
-import authContext from '@/presentation/contexts/auth-context'
 import { useTruncate } from '@/presentation/hooks'
-import React, { useContext } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { currentAccountState, sidebarState } from '..'
 import Styles from './side-menu-styles.scss'
 
 type Props = {
@@ -10,13 +10,14 @@ type Props = {
 }
 
 const SideBar: React.FC<Props> = ({ leave }) => {
-  const { state, setState } = useContext(authContext)
+  const [state, setState] = useRecoilState(sidebarState)
+  const { getCurrentAccount } = useRecoilValue(currentAccountState)
   const close = (): void => setState((old) => ({ ...old, open: !state.open }))
 
   return (
     <nav data-status={state.open ? 'open' : 'closed'}>
       <div className={Styles.greeting}>
-        Olá, {useTruncate(state.user as string, 20)}
+        Olá, {useTruncate(getCurrentAccount(), 20)}
       </div>
       <Link onClick={close} to="/">
         Dragões

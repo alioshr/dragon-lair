@@ -1,11 +1,18 @@
-import authContext from '@/presentation/contexts/auth-context'
 import Styles from './burguer-styles.scss'
-import React, { useContext } from 'react'
+import React from 'react'
+import { sidebarState } from '..'
+import { useRecoilState } from 'recoil'
 
 const Burger: React.FC = () => {
-  const { state, setState } = useContext(authContext)
+  const [state, setState] = useRecoilState(sidebarState)
   return (
-    <button className={Styles.burguer} data-status={state.open ? 'open' : 'closed'} onClick={() => setState((prevState) => ({ ...prevState, open: !state.open }))}>
+    <button
+      className={Styles.burguer}
+      data-status={state.open ? 'open' : 'closed'}
+      onClick={() =>
+        setState((prevState) => ({ ...prevState, open: !state.open }))
+      }
+    >
       <div />
       <div />
       <div />

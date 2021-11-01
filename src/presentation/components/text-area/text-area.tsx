@@ -1,23 +1,21 @@
-import React, { Context, useContext, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Styles from './text-area-styles.scss'
 
-type Props = {
-  inputProps: React.DetailedHTMLProps<
-  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-  HTMLTextAreaElement
-  >
-  context: Context<any>
+type Props = React.DetailedHTMLProps<
+React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+HTMLTextAreaElement
+> & {
+  state: any
+  setState: any
 }
 
-const TextArea: React.FC<Props> = ({ inputProps, context }) => {
+const TextArea: React.FC<Props> = ({ state, setState, ...props }) => {
   const inputRef = useRef<HTMLTextAreaElement>()
   const [touched, setTouched] = useState(false)
-  const { errorState, state } = useContext<any>(context)
-  const setState = state[1]
-  const error = errorState[0][inputProps.name as any]
+  const error = state[`${props.name as string}Error`]
 
   return (<div
-  data-testid={`${inputProps.name as string}-wrapper`}
+  data-testid={`${props.name as string}-wrapper`}
   className={Styles.inputWrapper}
   data-status={
     error && !touched
@@ -31,8 +29,8 @@ const TextArea: React.FC<Props> = ({ inputProps, context }) => {
       onBlur={() => !touched && setTouched(true)}
       ref={inputRef as any}
       title={error as string}
-      data-testid={`${inputProps.name as string}-input`}
-      {...inputProps}
+      data-testid={`${props.name as string}-input`}
+      {...props}
       placeholder=" "
       readOnly
       onFocus={(e) => {
@@ -46,9 +44,9 @@ const TextArea: React.FC<Props> = ({ inputProps, context }) => {
     />
     <label
     title={error as string}
-    data-testid={`${inputProps.name as string}-label`}
+    data-testid={`${props.name as string}-label`}
     onClick={() => { (inputRef as React.MutableRefObject<HTMLTextAreaElement>).current.focus() }}
-    >{inputProps.placeholder}
+    >{props.placeholder}
     </label>
   </div>)
 }

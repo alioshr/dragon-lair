@@ -1,22 +1,22 @@
-import React, { Context, useContext } from 'react'
+import React from 'react'
 import { Spinner } from '..'
 import Styles from './form-status-styles.scss'
 
 type Props = {
-  context: Context<any>
+  state: any
 }
 
-const FormStatus: React.FC<Props> = ({ context }) => {
-  const { errorState, state } = useContext<any>(context)
+const FormStatus: React.FC<Props> = ({ state }) => {
+  const { isLoading, mainError } = state
 
   return (
     <div data-testid="status-wrapper" className={Styles.errorWrapper}>
-      {errorState[0].main && (
+      {mainError && (
         <span data-testid="main-error" className={Styles.error}>
-          {errorState[0].main}
+          {mainError}
         </span>
       )}
-      {state[0].isLoading && (
+      {isLoading && (
         <Spinner data-testid="status-spinner" className="spinner" />
       )}
     </div>
