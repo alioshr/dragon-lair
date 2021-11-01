@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Styles from './details-styles.scss'
 import { GetDragon } from '@/domain/usecases'
 import { useParams } from 'react-router-dom'
-import { Error } from '@/presentation/components/'
+import { ErrorBase } from '@/presentation/components/'
 import Info from './components/info/info'
 
 type Props = {
@@ -46,7 +46,7 @@ const DetailsDragonPage: React.FC<Props> = ({ getDragon }) => {
     <div className={Styles.wrapper} data-testid="wrapper">
         <div data-testid="content-wrapper" className={Styles.content}>
         {state.mainError
-          ? <Error error={state.mainError}/>
+          ? <ErrorBase error={state.mainError}/>
           : <Info state={state}/>
         }
         </div>
