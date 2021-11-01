@@ -1,55 +1,41 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Styles from './login-styles.scss'
-import { FormStatus, Input } from '@/presentation/components'
+import { currentAccountState } from '@/presentation/components'
 import { Validator } from '@/presentation/protocols'
-import LoginContext, {
-  StateTypes,
-  ErrorStateTypes
-} from '@/presentation/contexts/login-context'
-import { SaveAccessToken } from '@/domain/usecases'
 import { Redirect, useHistory } from 'react-router-dom'
-import authContext from '@/presentation/contexts/auth-context'
+import { useResetRecoilState, useRecoilValue, useRecoilState } from 'recoil'
+import { loginState, Input, SubmitButton, FormStatus } from './components'
 
 type Props = {
   validator: Validator
-  saveAccessToken: SaveAccessToken
 }
 
-const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
-  const context = useContext(authContext)
+const Login: React.FC<Props> = ({ validator }) => {
+  const resetLoginState = useResetRecoilState(loginState)
+  const { setCurrentAccount, getCurrentAccount } = useRecoilValue(currentAccountState)
   const history = useHistory()
-  const [state, setState] = useState<StateTypes>({
-    name: '',
-    password: ''
-  })
+  const [state, setState] = useRecoilState(loginState)
 
-  const [errorState, setErrorState] = useState<ErrorStateTypes>({
-    name: '',
-    password: '',
-    main: ''
-  })
+  useEffect(() => resetLoginState(), [])
+  useEffect(() => validate('name'), [state.name])
+  useEffect(() => validate('password'), [state.password])
 
-  useEffect(() => {
-    const nameError = validator.validate('name', state)
-    const passwordError = validator.validate('password', state)
-
-    setErrorState((prevState) => ({
-      ...prevState,
-      name: nameError,
-      password: passwordError
-    }))
-  }, [state.password, state.name])
+  const validate = (field: string): void => {
+    const { name, password } = state
+    const formData = { name, password }
+    setState(old => ({ ...old, [`${field}Error`]: validator.validate(field, formData) }))
+    setState(old => ({ ...old, isFormInvalid: !!old.nameError || !!old.passwordError }))
+  }
 
   const loginHandler = async (
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault()
     try {
-      await saveAccessToken.save(state.name)
-      context.setState((old) => ({ ...old, isAuth: true, user: state.name }))
+      await setCurrentAccount(state.name)
       history.replace('/')
     } catch (error) {
-      setErrorState((prevState) => ({
+      setState((prevState) => ({
         ...prevState,
         main: (error as Error).message
       }))
@@ -57,13 +43,8 @@ const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
   }
 
   return (
-    <LoginContext.Provider
-      value={{
-        state: [state, setState],
-        errorState: [errorState, setErrorState]
-      }}
-    >
-      {context.state.isAuth && <Redirect to="/" />}
+  <>
+      {getCurrentAccount() && <Redirect to="/" />}
       <div className={Styles.wrapper}>
         <form
           data-testid="login-form"
@@ -72,32 +53,20 @@ const Login: React.FC<Props> = ({ validator, saveAccessToken }) => {
         >
           <h2>Bem vindo(a)</h2>
           <Input
-            inputProps={{
-              type: 'text',
-              name: 'name',
-              placeholder: 'Nome de usuário'
-            }}
-            context={LoginContext}
+          type='text'
+          name='name'
+          placeholder='Nome de usuário'
           />
           <Input
-            inputProps={{
-              type: 'password',
-              name: 'password',
-              placeholder: 'Senha'
-            }}
-            context={LoginContext}
+          type='password'
+          name='password'
+          placeholder='Senha'
           />
-          <button
-            disabled={!!errorState.name || !!errorState.password}
-            data-testid="submit-button"
-            type="submit"
-          >
-            Entrar
-          </button>
-          <FormStatus context={LoginContext} />
+          <SubmitButton text="Entrar" />
+          <FormStatus />
         </form>
       </div>
-    </LoginContext.Provider>
+      </>
   )
 }
 
