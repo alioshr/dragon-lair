@@ -49,7 +49,7 @@ const DragonCard: React.FC<Props> = ({ dragon }) => {
         <div className={Styles.infoWrapper}>
           <div className={Styles.infoCard}>
             <h2>Nome</h2>
-            <p>{useTruncate(dragon.name, 80)}</p>
+            <p>{useTruncate(dragon.name, 15)}</p>
           </div>
         </div>
       </div>
