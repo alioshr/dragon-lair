@@ -2,9 +2,9 @@ import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import '@/presentation/styles/_global.scss'
 import PrivateRoute from '../proxies/private-route'
-import { makeLocalGetAccessToken } from '../factories/usecases/get-access-token/local-get-access-token-factory'
-import { makeLocalDeleteAccessToken } from '../factories/usecases/remove-access-token/local-remove-access-token-factory'
-import { Header } from '@/presentation/pages'
+import { Header, currentAccountState } from '@/presentation/components'
+import { RecoilRoot } from 'recoil'
+import { getCurrentAccountAdapter, setCurrentAccountAdapter } from '../adapters'
 
 type Props = {
   makeLogin: React.FC
@@ -21,21 +21,24 @@ const Router: React.FC<Props> = ({
   detailsPage,
   addDragon
 }) => {
+  const state = {
+    setCurrentAccount: setCurrentAccountAdapter,
+    getCurrentAccount: getCurrentAccountAdapter
+  }
   return (
-    <BrowserRouter>
-      <Header
-        getAccessToken={makeLocalGetAccessToken()}
-        deleteAccessToken={makeLocalDeleteAccessToken()}
-      >
-        <Switch>
-          <Route path="/login" exact component={makeLogin} />
-          <PrivateRoute path="/" exact component={makeDragons} />
-          <PrivateRoute path="/update/:id" exact component={updateDragon} />
-          <PrivateRoute path="/details/:id" exact component={detailsPage} />
-          <PrivateRoute path="/new" exact component={addDragon} />
-        </Switch>
-      </Header>
-    </BrowserRouter>
+    <RecoilRoot initializeState={({ set }) => set(currentAccountState, state)}>
+      <BrowserRouter>
+        <Header>
+          <Switch>
+            <Route path="/login" exact component={makeLogin} />
+            <PrivateRoute path="/" exact component={makeDragons} />
+            <PrivateRoute path="/update/:id" exact component={updateDragon} />
+            <PrivateRoute path="/details/:id" exact component={detailsPage} />
+            <PrivateRoute path="/new" exact component={addDragon} />
+          </Switch>
+        </Header>
+      </BrowserRouter>
+    </RecoilRoot>
   )
 }
 
