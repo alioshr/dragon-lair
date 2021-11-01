@@ -1,20 +1,21 @@
 import React, { useEffect } from 'react'
 import Styles from './login-styles.scss'
-import { currentAccountState } from '@/presentation/components'
+import { headerState } from '@/presentation/components'
 import { Validator } from '@/presentation/protocols'
-import { Redirect, useHistory } from 'react-router-dom'
-import { useResetRecoilState, useRecoilValue, useRecoilState } from 'recoil'
+import { Redirect } from 'react-router-dom'
+import { useResetRecoilState, useRecoilState } from 'recoil'
 import { loginState, Input, SubmitButton, FormStatus } from './components'
+import { useLogin } from '@/presentation/hooks'
 
 type Props = {
   validator: Validator
 }
 
 const Login: React.FC<Props> = ({ validator }) => {
-  const resetLoginState = useResetRecoilState(loginState)
-  const { setCurrentAccount, getCurrentAccount } = useRecoilValue(currentAccountState)
-  const history = useHistory()
   const [state, setState] = useRecoilState(loginState)
+  const [userState] = useRecoilState(headerState)
+  const resetLoginState = useResetRecoilState(loginState)
+  const login = useLogin(state.name)
 
   useEffect(() => resetLoginState(), [])
   useEffect(() => validate('name'), [state.name])
@@ -32,19 +33,14 @@ const Login: React.FC<Props> = ({ validator }) => {
   ): Promise<void> => {
     event.preventDefault()
     try {
-      await setCurrentAccount(state.name)
-      history.replace('/')
+      login()
     } catch (error) {
-      setState((prevState) => ({
-        ...prevState,
-        main: (error as Error).message
-      }))
+      setState((old) => ({ ...old, main: (error as Error).message }))
     }
   }
-
   return (
   <>
-      {getCurrentAccount() && <Redirect to="/" />}
+      {userState.user && <Redirect to="/" />}
       <div className={Styles.wrapper}>
         <form
           data-testid="login-form"
