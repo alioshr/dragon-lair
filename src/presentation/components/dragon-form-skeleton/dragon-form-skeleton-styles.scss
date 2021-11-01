@@ -1,5 +1,12 @@
 @import "../../styles/colors";
 
+.wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  flex-grow: 1;
+  width: 100%;
+
   .skeleton {
     background-color: $white;
     width: 100%;
@@ -41,6 +48,7 @@
       animation: shimmer infinite 1.2s;
     }
   }
+}
 
 @keyframes shimmer {
   100% {
