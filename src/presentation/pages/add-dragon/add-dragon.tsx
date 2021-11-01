@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import DragonFormContext, { StateTypes, ErrorStateTypes } from '@/presentation/contexts/dragon-form-context'
+import React, { useEffect } from 'react'
 import Styles from './add-dragon-styles.scss'
-import { DragonFormSkeleton, DragonForm } from '@/presentation/components'
+import { DragonFormSkeleton } from '@/presentation/components'
 import { Validator } from '@/presentation/protocols'
 import { AddDragon } from '@/domain/usecases'
 import { useHistory } from 'react-router-dom'
+import {
+  Input,
+  TextArea,
+  SubmitButton,
+  FormStatus,
+  addDragonState
+} from './components'
+import { useRecoilState } from 'recoil'
+import { useErrorHandler } from '@/presentation/hooks'
 
 type Props = {
   validator: Validator
@@ -13,79 +21,64 @@ type Props = {
 
 const AddDragonPage: React.FC<Props> = ({ validator, createDragon }) => {
   const history = useHistory()
-  const [state, setState] = useState<StateTypes>({
-    name: '',
-    type: '',
-    isLoading: false
+  const [state, setState] = useRecoilState(addDragonState)
+  const handleError = useErrorHandler((error: Error) => {
+    setState((old) => ({ ...old, mainError: error.message, isLoading: false }))
   })
 
-  const [errorState, setErrorState] = useState<ErrorStateTypes>({
-    name: '',
-    type: '',
-    main: ''
-  })
+  useEffect(() => validate('name'), [state.name])
+  useEffect(() => validate('type'), [state.type])
 
-  useEffect(() => {
-    const formState = {
-      name: state.name,
-      type: state.type
-    }
-    const nameError = validator.validate('name', formState)
-    const typeError = validator.validate('type', formState)
-    console.log(nameError, typeError)
-    setErrorState((prevState) => ({
-      ...prevState,
-      name: nameError,
-      type: typeError
+  const validate = (field: string): void => {
+    const { name, type } = state
+    const formData = { name, type }
+    setState((old) => ({
+      ...old,
+      [`${field}Error`]: validator.validate(field, formData)
     }))
-  }, [state.name, state.type])
+    setState((old) => ({
+      ...old,
+      isFormInvalid: !!old.nameError || !!old.typeError
+    }))
+  }
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     event.preventDefault()
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    if (errorState.main || errorState.name || errorState.type) {
+    if (state.isLoading || state.isFormInvalid) {
       return
     }
-    setState((prevState) => ({
-      ...prevState,
-      isLoading: true
-    }))
+    setState((old) => ({ ...old, isLoading: true }))
     try {
       await createDragon.add({ name: state.name, type: state.type })
       history.replace('/')
     } catch (error) {
-      setErrorState((prevState) => ({
-        ...prevState,
-        main: (error as Error).message
-      }))
-      setState((prevState) => ({
-        ...prevState,
-        isLoading: false
-      }))
+      handleError(error as Error)
     }
   }
 
   return (
-    <DragonFormContext.Provider
-      value={{
-        state: [state, setState],
-        errorState: [errorState, setErrorState]
-      }}
-    >
-      <div className={Styles.wrapper} data-testid="wrapper">
-        {state.isLoading && !state.name
-          ? (
-          <DragonFormSkeleton />
-            )
-          : (
-          <DragonForm
-            title="Criar"
-            context={DragonFormContext}
-            handle={handleSubmit}
-          />
-            )}
-      </div>
-    </DragonFormContext.Provider>
+    <div className={Styles.wrapper} data-testid="wrapper">
+      {state.isLoading && !state.name
+        ? (
+        <DragonFormSkeleton />
+          )
+        : (
+        <form
+          data-testid="form"
+          className={Styles.form}
+          onSubmit={handleSubmit}
+        >
+          <h2>Criar Dragão</h2>
+          <Input type="text" name="name" placeholder="Nome do dragão" />
+          <TextArea name="type" placeholder="Tipo do dragão" />
+          <SubmitButton text="Criar" />
+          <FormStatus />
+        </form>
+          )}
+    </div>
   )
 }
 
