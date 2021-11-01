@@ -29,21 +29,20 @@ A simple and fun dragon crude playground
 
 > ## Use Cases requirements
 
-* [Add Dragon](./requirements/usecases/get-repositories.md)
-* [Exclude Dragon](./requirements/usecases/get-repositories.md)
-* [Get Dragon](./requirements/usecases/get-repositories.md)
-* [Get Dragon](./requirements/usecases/get-repositories.md)
-* [Update Dragon](./requirements/usecases/get-repositories.md)
-* [Get AccessToken](./requirements/usecases/get-repositories.md)
-* [Set AccessToken](./requirements/usecases/get-repositories.md)
-* [Remove AccessToken](./requirements/usecases/get-repositories.md)
+* [Add Dragon]()
+* [Exclude Dragon]()
+* [Get Dragon]()
+* [Get Dragon]()
+* [Update Dragon]()
+* [Get AccessToken]()
+* [Set AccessToken]()
 
 > ## Pages requirements
 
-* [Dragons list](./requirements/pages/repositories-list.md)
-* [Dragon Details](./requirements/pages/repositories-list.md)
-* [Update Dragon](./requirements/pages/repositories-list.md)
-* [Create Dragon](./requirements/pages/repositories-list.md)
+* [Dragons list]()
+* [Dragon Details]()
+* [Update Dragon]()
+* [Create Dragon]()
 
 > ## Design Patterns
 
@@ -92,6 +91,7 @@ A simple and fun dragon crude playground
 * Coveralls
 * Travis
 * Snyk
+* Recoil
 
 > ## Principles
 
