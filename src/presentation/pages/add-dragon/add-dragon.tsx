@@ -11,7 +11,7 @@ import {
   FormStatus,
   addDragonState
 } from './components'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useResetRecoilState } from 'recoil'
 import { useErrorHandler } from '@/presentation/hooks'
 
 type Props = {
@@ -21,11 +21,13 @@ type Props = {
 
 const AddDragonPage: React.FC<Props> = ({ validator, createDragon }) => {
   const history = useHistory()
+  const resetState = useResetRecoilState(addDragonState)
   const [state, setState] = useRecoilState(addDragonState)
   const handleError = useErrorHandler((error: Error) => {
     setState((old) => ({ ...old, mainError: error.message, isLoading: false }))
   })
 
+  useEffect(() => resetState(), [])
   useEffect(() => validate('name'), [state.name])
   useEffect(() => validate('type'), [state.type])
 

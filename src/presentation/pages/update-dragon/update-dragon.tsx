@@ -7,7 +7,7 @@ import { Validator } from '@/presentation/protocols'
 import { UpdateDragon } from '@/domain/usecases/update-dragon'
 import { Input, TextArea, SubmitButton, FormStatus, updateDragonState } from './components/'
 import { useErrorHandler } from '@/presentation/hooks'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useResetRecoilState } from 'recoil'
 
 type Props = {
   getDragon: GetDragon
@@ -22,12 +22,14 @@ const UpdateDragonPage: React.FC<Props> = ({
 }) => {
   const { id } = useParams<{ id: string }>()
   const history = useHistory()
+  const resetState = useResetRecoilState(updateDragonState)
   const [defaultData, setDefault] = useState({ type: '', name: '' })
   const [state, setState] = useRecoilState(updateDragonState)
   const handleError = useErrorHandler((error: Error) => {
     setState((old) => ({ ...old, mainError: error.message, isLoading: false }))
   })
 
+  useEffect(() => resetState(), [])
   useEffect(() => validate('name'), [state.name])
   useEffect(() => validate('type'), [state.type])
 
