@@ -9,10 +9,10 @@ type Props = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>
 const Input: React.FC<Props> = ({ state, setState, ...props }) => {
   const inputRef = useRef<HTMLInputElement>()
   const [touched, setTouched] = useState(false)
-  const error = state[`${props.name as string}Error`]
+  const error = state[`${props.name}Error`]
   return (
     <div
-    data-testid={`${props.name as string}-wrapper`}
+    data-testid={`${props.name}-wrapper`}
     className={Styles.inputWrapper}
     data-status={
       error && !touched
@@ -26,7 +26,7 @@ const Input: React.FC<Props> = ({ state, setState, ...props }) => {
         onBlur={() => !touched && setTouched(true)}
         ref={inputRef as any}
         title={error as string}
-        data-testid={`${props.name as string}-input`}
+        data-testid={`${props.name}-input`}
         {...props}
         placeholder=" "
         readOnly
@@ -41,8 +41,8 @@ const Input: React.FC<Props> = ({ state, setState, ...props }) => {
       />
       <label
       title={error as string}
-      data-testid={`${props.name as string}-label`}
-      onClick={() => { (inputRef as React.MutableRefObject<HTMLInputElement>).current.focus() }}
+      data-testid={`${props.name}-label`}
+      onClick={() => { (inputRef).current.focus() }}
       >{props.placeholder}
       </label>
     </div>

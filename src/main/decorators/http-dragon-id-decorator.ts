@@ -9,7 +9,7 @@ export class HttpDragonIdDecorator implements HttpClient {
   ): Promise<HttpResponse<Dragon>> {
     data = {
       ...data,
-      url: `${data.url}/${data.params as string}`,
+      url: `${data.url}/${data.params}`,
       params: undefined
     }
     return await this.httpClient.request(data)
