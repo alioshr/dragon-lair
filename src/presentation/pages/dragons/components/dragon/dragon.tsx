@@ -1,20 +1,18 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import Styles from './dragon-styles.scss'
 import { Dragon } from '@/domain/models'
 import { useTruncate } from '@/presentation/hooks'
-import DragonContext, {
-  DragonStateTypes
-} from '@/presentation/contexts/dragon-context'
 import { Link } from 'react-router-dom'
 import { EditIcon, Spinner, TrashIcon } from '@/presentation/components'
+import { useRecoilState } from 'recoil'
+import { dragonListState } from '../atoms/atoms'
 
 type Props = {
   dragon: Dragon
 }
 
 const DragonCard: React.FC<Props> = ({ dragon }) => {
-  const { state, setState } = useContext<DragonStateTypes>(DragonContext)
-
+  const [state, setState] = useRecoilState(dragonListState)
   return (
     <li>
       <div className={Styles.dragonContent}>

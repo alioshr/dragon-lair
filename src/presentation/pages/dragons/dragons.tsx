@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Styles from './dragons-styles.scss'
 import { GetDragons, ExcludeDragon } from '@/domain/usecases/'
 import { DragonList } from './components'
-import DragonsContext, {
-  StateTypes
-} from '@/presentation/contexts/dragon-context'
-import { Error } from '@/presentation/components'
+import { ErrorBase } from '@/presentation/components'
+import { dragonListState } from './components/atoms/atoms'
+import { useErrorHandler } from '@/presentation/hooks'
+import { useRecoilState, useResetRecoilState } from 'recoil'
 
 type Props = {
   getDragons: GetDragons
@@ -13,13 +13,11 @@ type Props = {
 }
 
 const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
-  const [skipCount, setSkipCount] = useState(true)
-  const [state, setState] = useState<StateTypes>({
-    dragons: [],
-    isLoading: false,
-    error: null,
-    reload: false,
-    id: null
+  const [state, setState] = useRecoilState(dragonListState)
+
+  const resetDragonListState = useResetRecoilState(dragonListState)
+  const handleError = useErrorHandler((error: Error) => {
+    setState(old => ({ ...old, error, isLoading: false }))
   })
 
   const reload = (): void => setState((prevState) => ({
@@ -30,6 +28,7 @@ const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
     id: null
   }))
 
+  useEffect(() => resetDragonListState(), [])
   useEffect(() => {
     setState((prevState) => ({ ...prevState, isLoading: true }))
     getDragons
@@ -41,48 +40,31 @@ const Dragons: React.FC<Props> = ({ getDragons, excludeDragon }) => {
           isLoading: false
         }))
       })
-      .catch((error) => {
-        setState((prevState) => ({
-          ...prevState,
-          isLoading: false,
-          error: error
-        }))
-      })
+      .catch(handleError)
   }, [state.reload])
 
   useEffect(() => {
-    if (skipCount) setSkipCount(false)
-    if (!skipCount && state.id) {
+    if (state.id) {
       setState((prevState) => ({ ...prevState, isLoading: true }))
       excludeDragon.delete(state.id)
-        .then(() => {
-          reload()
-        })
-        .catch((error) => {
-          setState((prevState) => ({
-            ...prevState,
-            isLoading: false,
-            error: error
-          }))
-        })
+        .then(reload)
+        .catch(handleError)
     }
   }, [state.id])
 
   return (
-    <DragonsContext.Provider value={{ state, setState }}>
       <div className={Styles.dragonListWrapper}>
         <div className={Styles.contentWrapper}>
           <h2>Dragões</h2>
           {state.error
             ? (
-            <Error error={state.error} reload={reload} />
+            <ErrorBase error={state.error} reload={reload} />
               )
             : (
             <DragonList />
               )}
         </div>
       </div>
-    </DragonsContext.Provider>
   )
 }
 

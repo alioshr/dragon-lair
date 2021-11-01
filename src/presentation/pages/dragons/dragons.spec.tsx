@@ -1,22 +1,17 @@
-import React from 'react'
 import {
   fireEvent,
-  render,
-  RenderResult,
   screen,
   waitFor
 } from '@testing-library/react'
 import { Dragons } from '..'
 import { mockedDragons } from '@/domain/test'
-import { ExcludeDragonSpy, GetDragonsSpy } from '@/presentation/test'
-import { Router } from 'react-router'
+import { ExcludeDragonSpy, GetDragonsSpy, renderWithHistory } from '@/presentation/test'
 import { createMemoryHistory } from 'history'
 import { NoContentError, UnexpectedError } from '@/domain/errors'
 
 const DRAGONS = mockedDragons()
 
 type SutTypes = {
-  sut: RenderResult
   getDragonsSpy: GetDragonsSpy
   excludeDragonSpy: ExcludeDragonSpy
 }
@@ -25,17 +20,19 @@ const makeSut = (
   getDragonsSpy = new GetDragonsSpy(DRAGONS),
   excludeDragonSpy = new ExcludeDragonSpy()
 ): SutTypes => {
-  const sut = render(
-    <Router history={history}>
-    <Dragons excludeDragon={excludeDragonSpy} getDragons={getDragonsSpy} />
-    </Router>
-  )
-  return { sut, getDragonsSpy, excludeDragonSpy }
+  renderWithHistory({
+    history,
+    Page: () => Dragons({ excludeDragon: excludeDragonSpy, getDragons: getDragonsSpy })
+  })
+  return {
+    getDragonsSpy,
+    excludeDragonSpy
+  }
 }
 describe('Dragons', () => {
   test('Should load 4 skeletons initially', () => {
-    const { sut } = makeSut()
-    const dragonList = sut.getByTestId('dragons-list')
+    makeSut()
+    const dragonList = screen.getByTestId('dragons-list')
     const skeletons = dragonList.querySelectorAll('li:empty')
     expect(skeletons.length).toBe(4)
   })

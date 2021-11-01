@@ -1,13 +1,12 @@
-import React, { useContext } from 'react'
-import DragonContext, {
-  DragonStateTypes
-} from '@/presentation/contexts/dragon-context'
+import React from 'react'
 import { DragonCard } from '..'
 import Skeleton from '../skeleton/skeleton'
 import './list-styles.scss'
+import { useRecoilState } from 'recoil'
+import { dragonListState } from '../atoms/atoms'
 
 const List: React.FC = () => {
-  const { state } = useContext<DragonStateTypes>(DragonContext)
+  const [state] = useRecoilState(dragonListState)
 
   return (
     <ul data-testid="dragons-list">
