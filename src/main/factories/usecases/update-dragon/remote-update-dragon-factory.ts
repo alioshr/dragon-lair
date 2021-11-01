@@ -1,4 +1,4 @@
-import { RemoteUpdateDragon } from '@/data/usecases/update-dragon/remote-update-dragon'
+import { RemoteUpdateDragon } from '@/data/usecases/remote-update-dragon'
 import { UpdateDragon } from '@/domain/usecases/update-dragon'
 import { HttpDragonIdDecorator } from '@/main/decorators/http-dragon-id-decorator'
 import { makeAPIUrl } from '../../http/api-url-factory'

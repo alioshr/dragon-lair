@@ -1,4 +1,4 @@
-import { RemoteExcludeDragon } from '@/data/usecases/exclude-dragon/remote-exclude-dragons'
+import { RemoteExcludeDragon } from '@/data/usecases/remote-exclude-dragons'
 import { ExcludeDragon } from '@/domain/usecases'
 import { HttpDragonIdDecorator } from '@/main/decorators/http-dragon-id-decorator'
 import { makeAPIUrl } from '../../http/api-url-factory'

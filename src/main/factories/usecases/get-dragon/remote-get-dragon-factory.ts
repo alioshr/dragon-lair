@@ -1,4 +1,4 @@
-import { RemoteGetDragon } from '@/data/usecases/get-dragon/remote-get-dragon'
+import { RemoteGetDragon } from '@/data/usecases/remote-get-dragon'
 import { GetDragon } from '@/domain/usecases'
 import { HttpDragonIdDecorator } from '@/main/decorators/http-dragon-id-decorator'
 import { makeAPIUrl } from '../../http/api-url-factory'
