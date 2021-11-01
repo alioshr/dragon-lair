@@ -2,7 +2,7 @@
 @import '../../styles/config';
 
 .burguer {
-  position: absolute;
+  position: fixed;
   top: 3vh;
   left: 2rem;
   display: flex;
