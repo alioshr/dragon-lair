@@ -1,16 +1,16 @@
 import Styles from './burguer-styles.scss'
 import React from 'react'
-import { sidebarState } from '..'
+import { headerState } from '..'
 import { useRecoilState } from 'recoil'
 
 const Burger: React.FC = () => {
-  const [state, setState] = useRecoilState(sidebarState)
+  const [state, setState] = useRecoilState(headerState)
   return (
     <button
       className={Styles.burguer}
-      data-status={state.open ? 'open' : 'closed'}
+      data-status={state.isSidebarOpen ? 'open' : 'closed'}
       onClick={() =>
-        setState((prevState) => ({ ...prevState, open: !state.open }))
+        setState((prevState) => ({ ...prevState, isSidebarOpen: !state.isSidebarOpen }))
       }
     >
       <div />

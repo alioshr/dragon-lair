@@ -2,7 +2,7 @@ import { useTruncate } from '@/presentation/hooks'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { currentAccountState, sidebarState } from '..'
+import { currentAccountState, headerState } from '..'
 import Styles from './side-menu-styles.scss'
 
 type Props = {
@@ -10,12 +10,13 @@ type Props = {
 }
 
 const SideBar: React.FC<Props> = ({ leave }) => {
-  const [state, setState] = useRecoilState(sidebarState)
+  const [state, setState] = useRecoilState(headerState)
   const { getCurrentAccount } = useRecoilValue(currentAccountState)
-  const close = (): void => setState((old) => ({ ...old, open: !state.open }))
+  const close = (): void =>
+    setState((old) => ({ ...old, isSidebarOpen: !state.isSidebarOpen }))
 
   return (
-    <nav data-status={state.open ? 'open' : 'closed'}>
+    <nav data-status={state.isSidebarOpen ? 'open' : 'closed'}>
       <div className={Styles.greeting}>
         Olá, {useTruncate(getCurrentAccount(), 20)}
       </div>
