@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import '@/presentation/styles/_global.scss'
 import PrivateRoute from '../proxies/private-route'
 import { Header, currentAccountState } from '@/presentation/components'
@@ -35,6 +35,7 @@ const Router: React.FC<Props> = ({
             <PrivateRoute path="/update/:id" exact component={updateDragon} />
             <PrivateRoute path="/details/:id" exact component={detailsPage} />
             <PrivateRoute path="/new" exact component={addDragon} />
+            <Route render={() => <Redirect to="/" />} />
           </Switch>
         </Header>
       </BrowserRouter>
