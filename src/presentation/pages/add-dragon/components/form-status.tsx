@@ -5,9 +5,9 @@ import { useRecoilValue } from 'recoil'
 import React from 'react'
 
 const FormStatus: React.FC = () => {
-  const state = useRecoilValue(addDragonState)
+  const { isLoading, mainError } = useRecoilValue(addDragonState)
   return (
-    <FormStatusBase state={state} />
+    <FormStatusBase isLoading={isLoading} mainError={mainError} />
   )
 }
 

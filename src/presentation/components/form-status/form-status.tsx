@@ -3,12 +3,11 @@ import { Spinner } from '..'
 import Styles from './form-status-styles.scss'
 
 type Props = {
-  state: any
+  isLoading: boolean
+  mainError: string
 }
 
-const FormStatus: React.FC<Props> = ({ state }) => {
-  const { isLoading, mainError } = state
-
+const FormStatus: React.FC<Props> = ({ isLoading, mainError }) => {
   return (
     <div data-testid="status-wrapper" className={Styles.errorWrapper}>
       {mainError && (

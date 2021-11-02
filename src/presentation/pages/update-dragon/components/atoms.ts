@@ -6,7 +6,7 @@ type StateTypes = {
   type: string
   nameError: string
   typeError: string
-  mainError: string
+  mainError: Error | null
   isFormInvalid: boolean
 }
 
@@ -18,7 +18,7 @@ export const updateDragonState = atom<StateTypes>({
     isLoading: false,
     nameError: '',
     typeError: '',
-    mainError: '',
+    mainError: null,
     isFormInvalid: true
   }
 })
