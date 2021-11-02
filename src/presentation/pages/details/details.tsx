@@ -50,7 +50,6 @@ const DetailsDragonPage: React.FC<Props> = ({ getDragon }) => {
           : <Info state={state}/>
         }
         </div>
-          )
     </div>
   )
 }
