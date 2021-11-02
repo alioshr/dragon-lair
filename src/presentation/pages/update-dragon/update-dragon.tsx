@@ -5,7 +5,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { DragonFormSkeleton } from '@/presentation/components'
 import { Validator } from '@/presentation/protocols'
 import { UpdateDragon } from '@/domain/usecases/update-dragon'
-import { Input, TextArea, SubmitButton, FormStatus, updateDragonState } from './components/'
+import { Input, TextArea, SubmitButton, FormStatus, updateDragonState, Error } from './components/'
 import { useErrorHandler } from '@/presentation/hooks'
 import { useRecoilState, useResetRecoilState } from 'recoil'
 
@@ -26,7 +26,7 @@ const UpdateDragonPage: React.FC<Props> = ({
   const [defaultData, setDefault] = useState({ type: '', name: '' })
   const [state, setState] = useRecoilState(updateDragonState)
   const handleError = useErrorHandler((error: Error) => {
-    setState((old) => ({ ...old, mainError: error.message, isLoading: false }))
+    setState((old) => ({ ...old, mainError: error, isLoading: false }))
   })
 
   useEffect(() => resetState(), [])
@@ -93,11 +93,10 @@ const UpdateDragonPage: React.FC<Props> = ({
 
   return (
     <div className={Styles.wrapper} data-testid="wrapper">
-      {state.isLoading && !state.name
-        ? (
-        <DragonFormSkeleton />
-          )
-        : (
+      <div className={Styles.content}>
+      {state.mainError && !state.name && <Error />}
+      {state.isLoading && !state.name && <DragonFormSkeleton />}
+      {state.name &&
         <form
           data-testid="form"
           className={Styles.form}
@@ -109,7 +108,8 @@ const UpdateDragonPage: React.FC<Props> = ({
           <SubmitButton text="Atualizar" />
           <FormStatus />
         </form>
-          )}
+          }
+      </div>
     </div>
   )
 }
