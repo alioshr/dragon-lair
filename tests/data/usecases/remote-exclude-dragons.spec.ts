@@ -1,4 +1,4 @@
-import { UnexpectedError } from '@/domain/errors'
+import { NotFoundError, UnexpectedError } from '@/domain/errors'
 import { mockedDragons } from '@/../tests/domain/mocks'
 import { ExcludeDragon } from '@/domain/usecases'
 import faker from 'faker'
@@ -45,7 +45,7 @@ describe('RemoteGetDragons', () => {
     httpClientSpy.response = { statusCode: HttpStatusCode.notFound }
     const params = faker.datatype.uuid()
     const promise = sut.delete(params)
-    await expect(promise).rejects.toThrow(new UnexpectedError())
+    await expect(promise).rejects.toThrow(new NotFoundError())
   })
   test('should throw Unexpected error HttpClient returns 500', async () => {
     const { sut, httpClientSpy } = makeSut()

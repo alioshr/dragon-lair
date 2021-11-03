@@ -1,5 +1,5 @@
 import { HttpClient, HttpStatusCode } from '@/data/protocols'
-import { UnexpectedError } from '@/domain/errors'
+import { NotFoundError, UnexpectedError } from '@/domain/errors'
 import { Dragon } from '@/domain/models'
 import { ExcludeDragon } from '@/domain/usecases/exclude-dragon'
 
@@ -18,6 +18,7 @@ export class RemoteExcludeDragon implements ExcludeDragon {
 
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok: return httpResponse.body
+      case HttpStatusCode.notFound: throw new NotFoundError()
       default: throw new UnexpectedError()
     }
   }
