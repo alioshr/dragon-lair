@@ -1,4 +1,4 @@
-import { UnexpectedError } from '@/domain/errors'
+import { NotFoundError, UnexpectedError } from '@/domain/errors'
 import { mockedDragons } from '@/../tests/domain/mocks'
 import { GetDragon } from '@/domain/usecases'
 import faker from 'faker'
@@ -35,12 +35,12 @@ describe('RemoteGetDragons', () => {
     const promise = sut.get(id)
     await expect(promise).rejects.toThrow(new UnexpectedError())
   })
-  test('should throw Unexpected error HttpClient returns 404', async () => {
+  test('should throw NotFoundError error HttpClient returns 404', async () => {
     const { sut, httpClientSpy } = makeSut()
     httpClientSpy.response = { statusCode: HttpStatusCode.notFound }
     const id = faker.datatype.uuid()
     const promise = sut.get(id)
-    await expect(promise).rejects.toThrow(new UnexpectedError())
+    await expect(promise).rejects.toThrow(new NotFoundError())
   })
   test('should throw Unexpected error HttpClient returns 500', async () => {
     const { sut, httpClientSpy } = makeSut()

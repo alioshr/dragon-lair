@@ -1,5 +1,5 @@
 import { HttpClient, HttpStatusCode } from '@/data/protocols'
-import { UnexpectedError } from '@/domain/errors'
+import { NotFoundError, UnexpectedError } from '@/domain/errors'
 import { Dragon } from '@/domain/models'
 import { GetDragon } from '@/domain/usecases'
 
@@ -18,6 +18,7 @@ export class RemoteGetDragon implements GetDragon {
 
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok: return httpResponse.body
+      case HttpStatusCode.notFound: throw new NotFoundError()
       default: throw new UnexpectedError()
     }
   }
