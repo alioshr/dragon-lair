@@ -1,4 +1,4 @@
-import { UnexpectedError } from '@/domain/errors'
+import { NotFoundError, UnexpectedError } from '@/domain/errors'
 import { mockedUpdateDragonDTO, mockedDragons } from '@/../tests/domain/mocks'
 import { UpdateDragon } from '@/domain/usecases'
 import { mockedUrl, HttpClientSpy } from '../mocks'
@@ -37,7 +37,7 @@ describe('RemoteUpdateDragon', () => {
     const { sut, httpClientSpy } = makeSut()
     httpClientSpy.response = { statusCode: HttpStatusCode.notFound }
     const promise = sut.update(UPDATE_PARAMS)
-    await expect(promise).rejects.toThrow(new UnexpectedError())
+    await expect(promise).rejects.toThrow(new NotFoundError())
   })
   test('should throw Unexpected error HttpClient returns 500', async () => {
     const { sut, httpClientSpy } = makeSut()
